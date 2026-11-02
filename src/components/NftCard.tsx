@@ -25,25 +25,25 @@ export function NftCard({ nft }: { nft: NFT }) {
   })
 
   return (
-    <article className="group panel overflow-hidden transition hover:-translate-y-1 hover:border-violet-500/60">
+    <article className="group overflow-hidden rounded-[1.25rem] bg-[#2a1a13] transition hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(0,0,0,.35)]">
       <div className="relative">
         <Link to="/nft/$id" params={{ id: nft.id }} aria-label={`Ver ${nft.title}`}><NftArtwork nft={nft} /></Link>
-        <button type="button" className={`absolute right-4 top-4 rounded-full p-3 backdrop-blur ${isFavorite ? 'bg-rose-600' : 'bg-black/45'}`}
+        <button type="button" className={`absolute right-2 top-2 rounded-full border border-[#db9955] p-2 backdrop-blur ${isFavorite ? 'bg-[#dc9650] text-[#28180d]' : 'bg-[#22120bcc] text-[#dc9650]'}`}
           aria-label={isFavorite ? `Remover ${nft.title} dos favoritos` : `Favoritar ${nft.title}`}
           aria-pressed={isFavorite} disabled={favorite.isPending}
           onClick={() => user ? favorite.mutate() : navigate({ to: '/login' })}><Heart size={18} fill={isFavorite ? 'currentColor' : 'none'} /></button>
         {nft.available === 0 && <span className="absolute bottom-4 right-4 rounded-full bg-red-600 px-3 py-1 text-xs font-bold">Esgotado</span>}
       </div>
-      <div className="p-5">
-        <p className="text-xs uppercase tracking-wider text-violet-300">{nft.collection}</p>
-        <div className="mt-2 flex items-start justify-between gap-2">
-          <Link to="/nft/$id" params={{ id: nft.id }} className="text-lg font-bold hover:text-violet-300">{nft.title}</Link>
-          <ArrowUpRight size={18} className="text-slate-500" />
+      <div className="p-3 md:p-4">
+        <p className="text-[10px] uppercase tracking-wider text-[#b98b69]">{nft.collection}</p>
+        <div className="mt-1 flex items-start justify-between gap-2">
+          <Link to="/nft/$id" params={{ id: nft.id }} className="text-sm font-semibold leading-tight text-[#f0e8de] hover:text-[#dc9650] md:text-base">{nft.title}</Link>
+          <ArrowUpRight size={15} className="hidden text-[#b68b6b] md:block" />
         </div>
-        <p className="mt-1 text-sm text-slate-400">by {nft.creator}</p>
-        <div className="mt-5 flex items-center justify-between border-t border-white/10 pt-4">
-          <span className="text-xs text-slate-400">Preço atual</span>
-          <span className="font-semibold">{nft.priceEth} ETH</span>
+        <p className="mt-1 hidden text-xs text-[#b69781] md:block">por {nft.creator}</p>
+        <div className="mt-2 flex items-center justify-between">
+          <span className="sr-only">Preço atual</span>
+          <span className="text-sm font-black text-[#dc9650] md:text-base">{nft.priceEth} ETH</span>
         </div>
       </div>
     </article>

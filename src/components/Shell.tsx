@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, Outlet } from '@tanstack/react-router'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import type { Socket } from 'socket.io-client'
-import { ShoppingBag, UserRound, Sparkles, Menu, Wifi, WifiOff } from 'lucide-react'
+import { ShoppingBag, UserRound, Heart, House, Wifi, WifiOff } from 'lucide-react'
 import { useAuth } from '../lib/auth'
 import { marketplaceApi } from '../lib/api'
 
@@ -54,7 +54,6 @@ function useRealtime(userId: string | undefined) {
 
 export function Shell() {
   const { user, logout } = useAuth()
-  const [menuOpen, setMenuOpen] = useState(false)
   const [networkMode, setNetworkMode] = useState(() => localStorage.getItem('jungle-network-mode') || 'normal')
   const connected = useRealtime(user?.id)
   const cart = useQuery({ queryKey: ['cart', user?.id ?? 'guest'], queryFn: marketplaceApi.cart })
@@ -71,30 +70,33 @@ export function Shell() {
   }
 
   return (
-    <div className="min-h-screen bg-[#090914] text-white">
-      <div className="border-b border-violet-500/20 bg-[#1b1534] px-4 py-2 text-center text-xs text-violet-200">✦ DEMO TÉCNICA — Transações, carteiras e dados são simulados. Nenhum pagamento real é realizado.</div>
-      <header className="sticky top-0 z-30 border-b border-white/10 bg-[#0c0c1be8] backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-4 lg:px-8">
-          <Link to="/" className="flex items-center gap-2 text-xl font-black tracking-tight"><span className="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-600"><Sparkles size={21}/></span> JUNGLE<span className="text-violet-400">NFT</span></Link>
-          <nav aria-label="Navegação principal" className="hidden items-center gap-7 text-sm text-slate-300 md:flex">
-            <Link to="/" className="hover:text-white [&.active]:text-violet-300">Discover</Link>
-            <Link to="/favorites" className="hover:text-white [&.active]:text-violet-300">Favorites</Link>
-            <Link to="/wallets" className="hover:text-white [&.active]:text-violet-300">Wallets</Link>
+    <div className="min-h-screen bg-[#130c09] pb-20 text-[#f8eee5] md:pb-0">
+      <div className="border-b border-[#453024] bg-[#2b1a13] px-4 py-1.5 text-center text-[10px] text-[#d6ac7d]">DEMONSTRAÇÃO TÉCNICA — Dados e pagamentos simulados. Nenhuma transação real é realizada.</div>
+      <header className="sticky top-0 z-30 hidden border-b border-[#52301e] bg-[#130c09ef] backdrop-blur-xl md:block">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-4 lg:px-8">
+          <Link to="/" className="text-base font-black tracking-[.16em]">KURIO</Link>
+          <nav aria-label="Navegação principal" className="flex items-center gap-9 text-sm font-semibold text-[#d3c5bb]">
+            <Link to="/" className="border-b-2 border-transparent py-3 hover:text-[#df9b55] [&.active]:border-[#df9b55] [&.active]:text-[#df9b55]">Início</Link>
+            <Link to="/" hash="explore" className="border-b-2 border-transparent py-3 hover:text-[#df9b55]">Mercado</Link>
+            <Link to="/favorites" className="border-b-2 border-transparent py-3 hover:text-[#df9b55]">Favoritos</Link>
+            <Link to="/wallets" className="border-b-2 border-transparent py-3 hover:text-[#df9b55]">Carteiras</Link>
           </nav>
-          <div className="flex items-center gap-3">
-            <span title={connected ? 'Socket.IO conectado' : 'Reconectando ao Socket.IO'} className="hidden text-xs text-slate-500 lg:flex">{connected ? <Wifi size={15} className="text-emerald-400"/> : <WifiOff size={15}/>}</span>
-            <Link to="/cart" className="relative rounded-xl border border-white/10 p-2.5 hover:bg-white/10" aria-label={`Carrinho, ${count} itens`}><ShoppingBag size={20}/>{count > 0 && <span className="absolute -right-2 -top-2 rounded-full bg-violet-600 px-1.5 text-xs">{count}</span>}</Link>
-            {user ? <Link to="/profile" className="hidden items-center gap-2 rounded-xl border border-white/10 px-3 py-2 text-sm sm:flex"><UserRound size={17}/>{user.name.split(' ')[0]}</Link> : <Link to="/login" className="btn-primary hidden text-sm sm:inline-flex">Sign in</Link>}
-            <button type="button" className="rounded-lg border border-white/10 p-2 md:hidden" onClick={() => setMenuOpen(!menuOpen)} aria-label="Abrir menu" aria-expanded={menuOpen}><Menu/></button>
+          <div className="flex items-center gap-4">
+            <span title={connected ? 'Socket.IO conectado' : 'Reconectando ao Socket.IO'} className="text-xs text-[#bba48f]">{connected ? <Wifi size={16} className="text-emerald-400"/> : <WifiOff size={16}/>}</span>
+            <Link to="/cart" className="relative rounded p-2 hover:bg-[#392216]" aria-label={`Carrinho, ${count} itens`}><ShoppingBag size={21}/>{count > 0 && <span className="absolute -right-1 -top-1 rounded-full bg-[#dd9650] px-1.5 text-xs text-[#1b100a]">{count}</span>}</Link>
+            {user ? <Link to="/profile" className="flex items-center gap-2 rounded px-3 py-2 text-sm"><UserRound size={17}/>{user.name.split(' ')[0]}</Link> : <Link to="/login" className="btn-primary text-sm">Entrar</Link>}
           </div>
         </div>
-        {menuOpen && <nav className="flex flex-col gap-4 border-t border-white/10 bg-[#121123] px-6 py-5 text-sm md:hidden" aria-label="Menu móvel" onClick={() => setMenuOpen(false)}>
-          <Link to="/">Discover</Link><Link to="/favorites">Favorites</Link><Link to="/wallets">Wallets</Link><Link to="/profile">Profile</Link><Link to="/login">Login</Link>
-        </nav>}
       </header>
       <Outlet />
-      <footer className="mt-20 border-t border-white/10 px-6 py-10 text-sm text-slate-500">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4"><span>© 2026 Jungle NFT · Frontend technical demonstration</span><div className="flex flex-wrap items-center gap-5"><label className="flex items-center gap-2">Network demo <select aria-label="Simular condição de rede" className="rounded-lg border border-white/20 bg-[#201d37] p-1 text-xs" value={networkMode} onChange={async event => { const mode=event.target.value;await marketplaceApi.setNetworkMode(mode);setNetworkMode(mode);await queryClient.resetQueries({queryKey:['nfts']}) }}><option value="normal">Normal</option><option value="slow">Slow</option><option value="empty">Empty</option><option value="error">HTTP 503</option><option value="offline">Offline</option></select></label><button onClick={resetDemo} className="underline hover:text-white">Reset demo</button>{user && <button onClick={() => {void logout()}} className="underline hover:text-white">Sign out</button>}<span>Mock API + React + Socket.IO</span></div></div>
+      <nav className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-4 rounded-t-[2rem] border-t border-[#523524] bg-[#25150f] px-5 py-4 text-[#ddb085] shadow-2xl md:hidden" aria-label="Navegação móvel">
+        <Link to="/" aria-label="Início" className="mx-auto"><House size={24}/></Link>
+        <Link to="/favorites" aria-label="Favoritos" className="mx-auto"><Heart size={24}/></Link>
+        <Link to="/cart" aria-label={`Carrinho, ${count} itens`} className="relative mx-auto"><ShoppingBag size={24}/>{count > 0 && <span className="absolute -right-2 -top-2 rounded-full bg-[#dc9650] px-1.5 text-xs text-[#21130d]">{count}</span>}</Link>
+        <Link to={user ? '/profile' : '/login'} aria-label={user ? 'Perfil' : 'Entrar'} className="mx-auto"><UserRound size={24}/></Link>
+      </nav>
+      <footer className="mt-16 border-t border-[#3f291c] px-6 py-9 text-sm text-[#c1a48b]">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4"><span>© 2026 KURIO · Demonstração técnica de marketplace NFT</span><div className="flex flex-wrap items-center gap-5"><label className="flex items-center gap-2">Simulação de rede <select aria-label="Simular condição de rede" className="rounded border border-[#66422a] bg-[#2d1b14] p-1 text-xs" value={networkMode} onChange={async event => { const mode=event.target.value;await marketplaceApi.setNetworkMode(mode);setNetworkMode(mode);await queryClient.resetQueries({queryKey:['nfts']}) }}><option value="normal">Normal</option><option value="slow">Slow</option><option value="empty">Empty</option><option value="error">HTTP 503</option><option value="offline">Offline</option></select></label><button onClick={resetDemo} className="underline hover:text-white">Restaurar demonstração</button>{user && <button onClick={() => {void logout()}} className="underline hover:text-white">Sign out</button>}<span>MSW + React + Socket.IO</span></div></div>
       </footer>
     </div>
   )
