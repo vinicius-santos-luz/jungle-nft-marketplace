@@ -42,9 +42,9 @@ function HomePage() {
         <div className="relative grid grid-cols-[minmax(0,1fr)_42%] items-center gap-3 overflow-hidden rounded-[2rem] bg-[#4f2f1d] p-4 md:min-h-[480px] md:grid-cols-[1.35fr_1fr] md:gap-16 md:rounded-none md:bg-transparent md:p-0">
           <div className="relative z-10 max-w-[45rem]">
             <span className="text-[11px] font-semibold tracking-wider text-[#f5dfc8] md:text-sm">Bem-vindo à Kurio</span>
-            <h1 className="mt-3 text-[clamp(1.25rem,4.3vw,4.1rem)] font-black uppercase leading-[1.36] tracking-[.025em] text-[#fff8f0] md:mt-6">SEJA DONO DO <span className="hidden md:inline">FUTURO DA ARTE</span><span className="md:hidden">CULTURA</span> DIGITAL</h1>
+            <h1 className="mt-3 text-[clamp(1.25rem,3.8vw,3.1rem)] font-black uppercase leading-[1.36] tracking-[.025em] text-[#fff8f0] md:mt-6"><span className="hidden md:inline">SEJA DONO DO FUTURO DA ARTE DIGITAL</span><span className="md:hidden">SEJA DONO DA CULTURA DIGITAL</span></h1>
             <p className="mt-3 max-w-xl text-[11px] leading-relaxed text-[#d9af84] md:mt-5 md:text-base">Descubra NFTs selecionados de criadores emergentes e consagrados. Colecione arte digital rara, apoie artistas e faça parte da cultura da internet.</p>
-            <a href="#explore" className="mt-4 inline-flex items-center gap-2 text-xs font-black uppercase text-[#e7a05b] md:btn-primary md:mt-9 md:text-base">EXPLORAR <ArrowRight size={16}/></a>
+            <a href="#explore" className="mt-4 inline-flex items-center gap-2 text-xs font-black uppercase text-[#e7a05b] md:mt-9 md:rounded-md md:bg-[#dc9650] md:px-7 md:py-3 md:text-base md:text-[#21130d]">EXPLORAR <ArrowRight size={16}/></a>
             <div className="mt-5 flex gap-2 md:mt-12"><span className="h-2 w-2 rounded-full bg-[#e6a05e]"/><span className="h-2 w-2 rounded-full bg-[#e6a05e]"/><span className="h-2 w-2 rounded-full bg-[#e6a05e]"/></div>
           </div>
           <div className="relative h-full min-h-[205px] md:min-h-0"><img src={emeraldApe} alt="NFT de macaco com óculos verdes e jaqueta esmeralda" className="absolute right-0 top-0 h-full max-h-[440px] w-full rounded-[1.2rem] object-cover md:relative md:ml-auto md:aspect-square md:h-auto md:max-w-[430px]"/></div>

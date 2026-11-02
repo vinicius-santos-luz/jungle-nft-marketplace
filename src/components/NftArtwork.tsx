@@ -1,9 +1,24 @@
 import type { NFT } from '../lib/models'
 import emeraldApe from '../assets/emerald-ape.png'
+import sageNomad from '../assets/sage-nomad.png'
+import neonVessel from '../assets/neon-vessel.png'
+import goldenBeat from '../assets/golden-beat.png'
+
+const artworkById: Record<string, string> = {
+  'nft-1': emeraldApe,
+  'nft-2': sageNomad,
+  'nft-3': neonVessel,
+  'nft-4': sageNomad,
+  'nft-5': sageNomad,
+  'nft-6': neonVessel,
+  'nft-7': goldenBeat,
+  'nft-8': goldenBeat,
+}
 
 export function NftArtwork({ nft, className = '' }: { nft: NFT; className?: string }) {
-  if (nft.id === 'nft-1') {
-    return <img src={emeraldApe} alt={`Arte digital ${nft.title}`} className={`aspect-square w-full object-cover ${className}`} />
+  const artwork = artworkById[nft.id]
+  if (artwork) {
+    return <img src={artwork} alt={`Arte digital ${nft.title}`} className={`aspect-square w-full object-cover ${className}`} />
   }
   return (
     <div className={`relative flex aspect-square items-center justify-center overflow-hidden ${className}`}

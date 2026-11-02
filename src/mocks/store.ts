@@ -16,7 +16,8 @@ export interface Store {
   orders: Order[]
 }
 
-const KEY = 'jungle-nft-mock-v1'
+// A new fixture version prevents older local demo data from masking the Kurio catalog.
+const KEY = 'jungle-nft-mock-v2'
 
 export function initialStore(): Store {
   return {

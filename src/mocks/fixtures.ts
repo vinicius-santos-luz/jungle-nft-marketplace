@@ -1,14 +1,14 @@
 import type { NFT } from '../lib/models'
 
 const descriptors: Array<[string, string, string, NFT['category'], string, string, string, string, string]> = [
-  ['Ethereal Bloom', 'Genesis Garden', 'Luna Nova', 'Art', '0.085', '✿', '#7744ea', '#eb66bb', 'A flower from a world that exists between dreams.'],
-  ['Neon Samurai', 'Cyber Legends', 'Akira X', 'Gaming', '0.240', '⚔', '#33289c', '#ef4a97', 'A rare warrior ready for the next digital frontier.'],
-  ['Cosmic Voyager', 'Beyond Orbit', 'Astra Labs', 'Art', '0.152', '✦', '#073b82', '#54e2d8', 'An explorer crossing the boundaries of imagination.'],
-  ['Soundwave #08', 'Digital Frequencies', 'DJ Ether', 'Music', '0.048', '♫', '#8e3363', '#fca849', 'A collectible visualization of an original beat.'],
-  ['Golden Horizon', 'Infinite Landscapes', 'Mia Chen', 'Photography', '0.115', '◒', '#a54d39', '#f1ca76', 'Golden light over an impossible horizon.'],
-  ['Pixel Panther', 'Wild Pixels', 'Studio K', 'Gaming', '0.093', '◆', '#1d4b45', '#8ef6ab', 'A legendary guardian of the pixel jungle.'],
-  ['Liquid Dreams', 'New Dimension', 'Luna Nova', 'Art', '0.128', '◉', '#3551bf', '#eb7efa', 'A fluid composition with a different shape for every viewer.'],
-  ['Echoes of Earth', 'Digital Frequencies', 'DJ Ether', 'Music', '0.067', '♬', '#23606d', '#b0f6e5', 'An atmospheric sound collectible.'],
+  ['Emerald Ape #042', 'Coleção Gênesis', 'Kurio Studio', 'Art', '1.19', '◆', '#4c7055', '#f8ead0', 'Um colecionável de edição limitada, com estilo esmeralda e identidade marcante.'],
+  ['Sage Nomad #009', 'Coleção Nomad', 'Kurio Studio', 'Art', '1.69', '◆', '#685671', '#e6dfc4', 'Arte digital de um viajante singular, parte da coleção Nomad.'],
+  ['Neon Vessel #552', 'Coleção Vessel', 'Kurio Studio', 'Gaming', '1.99', '◆', '#35473c', '#bed7c0', 'Uma edição rara com estética clássica e personalidade própria.'],
+  ['Cosmic Bloom #118', 'Coleção Nomad', 'Kurio Studio', 'Art', '1.29', '◆', '#685671', '#e6dfc4', 'Variação colecionável da série Nomad.'],
+  ['Violet Nomad #314', 'Coleção Nomad', 'Kurio Studio', 'Photography', '1.39', '◆', '#685671', '#e6dfc4', 'Um retrato da coleção Nomad em tons de violeta.'],
+  ['Ivory Baron #088', 'Coleção Vessel', 'Kurio Studio', 'Gaming', '1.79', '◆', '#35473c', '#bed7c0', 'Retrato de edição limitada com traje marfim.'],
+  ['Golden Beat #207', 'Coleção Golden', 'Kurio Studio', 'Music', '0.99', '◆', '#c39f6c', '#f4e8c8', 'Uma edição musical com referências clássicas e acabamento dourado.'],
+  ['Golden Signal #160', 'Coleção Golden', 'Kurio Studio', 'Music', '0.39', '◆', '#c39f6c', '#f4e8c8', 'Uma variação dourada para colecionadores de música digital.'],
   ['Prism of Time', 'New Dimension', 'Astra Labs', 'Art', '0.310', '◇', '#543580', '#ffbc80', 'A prism preserving a moment in time.'],
   ['Urban Silence', 'Infinite Landscapes', 'Mia Chen', 'Photography', '0.072', '▣', '#303e56', '#9aafce', 'A quiet evening in a vibrant city.'],
   ['Arcade Runner', 'Cyber Legends', 'Akira X', 'Gaming', '0.180', '⌁', '#93227e', '#68dbe8', 'A high-speed character from a neon arcade.'],

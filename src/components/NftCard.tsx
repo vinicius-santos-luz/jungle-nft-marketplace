@@ -1,4 +1,4 @@
-import { Heart, ArrowUpRight } from 'lucide-react'
+import { Heart } from 'lucide-react'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { marketplaceApi } from '../lib/api'
@@ -35,13 +35,10 @@ export function NftCard({ nft }: { nft: NFT }) {
         {nft.available === 0 && <span className="absolute bottom-4 right-4 rounded-full bg-red-600 px-3 py-1 text-xs font-bold">Esgotado</span>}
       </div>
       <div className="p-3 md:p-4">
-        <p className="text-[10px] uppercase tracking-wider text-[#b98b69]">{nft.collection}</p>
-        <div className="mt-1 flex items-start justify-between gap-2">
+        <div className="flex items-start justify-between gap-2">
           <Link to="/nft/$id" params={{ id: nft.id }} className="text-sm font-semibold leading-tight text-[#f0e8de] hover:text-[#dc9650] md:text-base">{nft.title}</Link>
-          <ArrowUpRight size={15} className="hidden text-[#b68b6b] md:block" />
         </div>
-        <p className="mt-1 hidden text-xs text-[#b69781] md:block">por {nft.creator}</p>
-        <div className="mt-2 flex items-center justify-between">
+        <div className="mt-1 flex items-center justify-between">
           <span className="sr-only">Preço atual</span>
           <span className="text-sm font-black text-[#dc9650] md:text-base">{nft.priceEth} ETH</span>
         </div>
