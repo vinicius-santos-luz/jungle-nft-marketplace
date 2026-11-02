@@ -8,7 +8,7 @@ const unauthorized = () => error('Faça login para continuar.', 401, 'UNAUTHORIZ
 
 // The Socket.IO codec completes the handshake and emits actual Socket.IO frames.
 // The client uses socket.io-client with WebSocket transport, not React callbacks.
-const socketUrl = `${window.location.origin.replace(/^http/, 'ws')}/socket.io/`
+const socketUrl = `${window.location.origin.replace(/^http/, 'ws')}/`
 const socketLink = ws.link(socketUrl)
 const clients = new Set<(event: string, payload: unknown) => void>()
 const socketHandler = socketLink.addEventListener('connection', connection => {
