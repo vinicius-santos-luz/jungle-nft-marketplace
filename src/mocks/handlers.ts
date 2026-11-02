@@ -8,6 +8,7 @@ const unauthorized = () => error('Faça login para continuar.', 401, 'UNAUTHORIZ
 
 // The Socket.IO codec completes the handshake and emits actual Socket.IO frames.
 // The client uses socket.io-client with WebSocket transport, not React callbacks.
+// MSW normalizes Socket.IO's /socket.io/ transport path to / when matching WebSockets.
 const socketUrl = `${window.location.origin.replace(/^http/, 'ws')}/`
 const socketLink = ws.link(socketUrl)
 const clients = new Set<(event: string, payload: unknown) => void>()
@@ -47,11 +48,17 @@ export const handlers = [
     const q = (params.get('q') ?? '').toLowerCase()
     const category = params.get('category') ?? 'all'
     const sort = (params.get('sort') ?? 'featured') as CatalogSort
+    const minPrice = params.get('minPrice')
+    const maxPrice = params.get('maxPrice')
     const page = Math.max(1, Number(params.get('page') ?? 1) || 1)
     let items = (mode === 'empty' ? [] : state.nfts).filter(nft => (
       (nft.title.toLowerCase().includes(q) || nft.collection.toLowerCase().includes(q) || nft.creator.toLowerCase().includes(q)) &&
-      (category === 'all' || nft.category === category)
+      (category === 'all' || nft.category === category) &&
+      (!minPrice || Number(nft.priceEth) >= Number(minPrice)) &&
+      (!maxPrice || Number(nft.priceEth) <= Number(maxPrice))
     ))
+    if (sort === 'recent') items = items.sort((a, b) => Number(b.id.split('-').at(-1)) - Number(a.id.split('-').at(-1)))
+    if (sort === 'trending') items = items.sort((a, b) => (b.popularity ?? 0) - (a.popularity ?? 0))
     if (sort === 'price-asc') items = items.sort((a, b) => Number(a.priceEth) - Number(b.priceEth))
     if (sort === 'price-desc') items = items.sort((a, b) => Number(b.priceEth) - Number(a.priceEth))
     if (sort === 'name') items = items.sort((a, b) => a.title.localeCompare(b.title))

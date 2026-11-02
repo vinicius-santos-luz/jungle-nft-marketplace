@@ -2,12 +2,14 @@ import { expect, test } from '@playwright/test'
 
 test('catalog search, category filter, ordering and URL restore', async ({ page }) => {
   await page.goto('/')
-  await expect(page.getByRole('heading', { name: 'Explore NFTs' })).toBeVisible()
-  await page.getByRole('button', { name: 'Gaming', exact: true }).click()
+  await expect(page.getByRole('tab', { name: 'Todos os NFTs' })).toBeVisible()
+  if ((page.viewportSize()?.width ?? 0) < 768) await page.getByRole('button', { name: 'Abrir filtros' }).click()
+  await page.getByRole('button', { name: /^Jogos(?:\s|$)/ }).click()
   await expect(page).toHaveURL(/category=Gaming/)
   await expect(page.getByText('Neon Vessel #552').first()).toBeVisible()
+  if ((page.viewportSize()?.width ?? 0) >= 768) await page.getByRole('button', { name: 'Abrir busca' }).click()
   await page.getByRole('searchbox', { name: 'Pesquisar NFTs' }).fill('Vessel')
-  await page.getByRole('button', { name: 'Search' }).click()
+  await page.getByRole('searchbox', { name: 'Pesquisar NFTs' }).press('Enter')
   await expect(page).toHaveURL(/q=Vessel/)
   await expect(page.getByText('Neon Vessel #552').first()).toBeVisible()
   await page.reload()
@@ -69,6 +71,23 @@ test('full purchase completes to receipt without real payment', async ({ page })
   await expect(page.getByText('Receipt snapshot')).toBeVisible()
 })
 
+test('NFT gallery and buy action lead to checkout without losing the cart', async ({ page }) => {
+  await page.goto('/nft/nft-1')
+  await expect(page.getByRole('heading', { name: 'Emerald Ape #042' })).toBeVisible()
+  if ((page.viewportSize()?.width ?? 0) >= 768) {
+    const alternateView = page.getByRole('button', { name: 'Detalhe do rosto' })
+    await alternateView.click()
+    await expect(alternateView).toHaveAttribute('aria-pressed', 'true')
+  }
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)
+  expect(overflow).toBeLessThanOrEqual(2)
+  await page.getByRole('button', { name: 'Comprar NFT' }).click()
+  await expect(page).toHaveURL(/\/login/)
+  await page.getByRole('button', { name: 'Sign in', exact: true }).click()
+  await expect(page).toHaveURL(/\/checkout/)
+  await expect(page.getByText('Emerald Ape #042').first()).toBeVisible()
+})
+
 test('invalid coupon gives error, then user can recover', async ({ page }) => {
   await page.goto('/nft/nft-1')
   await page.getByRole('button', { name: 'Add to cart' }).click()
@@ -87,7 +106,7 @@ test('invalid coupon gives error, then user can recover', async ({ page }) => {
 
 test('mobile layout has no unintended horizontal overflow', async ({ page }) => {
   await page.goto('/')
-  await expect(page.getByRole('heading', { name: 'Explore NFTs' })).toBeVisible()
+  await expect(page.getByRole('tab', { name: 'Todos os NFTs' })).toBeVisible()
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)
   expect(overflow).toBeLessThanOrEqual(2)
 })
@@ -96,13 +115,13 @@ test('direct access to a missing NFT shows a recoverable not-found state', async
   await page.goto('/nft/does-not-exist')
   await expect(page.getByRole('heading', { name: 'NFT not found' })).toBeVisible()
   await page.getByRole('link', { name: 'Back to catalog' }).click()
-  await expect(page.getByRole('heading', { name: 'Explore NFTs' })).toBeVisible()
+  await expect(page.getByRole('tab', { name: 'Todos os NFTs' })).toBeVisible()
 })
 
 test('registration reports duplicate email without changing the account', async ({ page }) => {
   await page.goto('/register')
   await page.getByRole('textbox', { name: 'Full name' }).fill('Duplicate Account')
-  await page.getByRole('textbox', { name: 'Email' }).fill('demo@jungle.test')
+  await page.getByRole('textbox', { name: 'Email', exact: true }).fill('demo@jungle.test')
   await page.getByLabel('Password').fill('Another1234!')
   await page.getByRole('button', { name: 'Create account' }).click()
   await expect(page.getByRole('alert')).toContainText('já está cadastrado')

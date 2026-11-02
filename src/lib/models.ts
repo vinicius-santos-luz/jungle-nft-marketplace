@@ -13,6 +13,13 @@ export interface NFT {
   version: number
   symbol: string
   colors: [string, string]
+  tokenNumber?: string
+  attributes?: string[]
+  rating?: number
+  reviewCount?: number
+  editions?: string[]
+  rarity?: string
+  popularity?: number
 }
 
 export interface User {
@@ -68,13 +75,15 @@ export interface ApiError {
   code: string
 }
 
-export type CatalogSort = 'featured' | 'price-asc' | 'price-desc' | 'name'
+export type CatalogSort = 'featured' | 'recent' | 'trending' | 'price-asc' | 'price-desc' | 'name'
 
 export interface CatalogParams {
   q?: string
   category?: string
   sort?: CatalogSort
   page?: number
+  minPrice?: string
+  maxPrice?: string
 }
 
 export interface CatalogResponse {

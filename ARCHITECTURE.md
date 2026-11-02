@@ -19,7 +19,7 @@ flowchart LR
   Client --> Query
 ```
 
-As respostas fictícias são produzidas pelos handlers MSW, não por componentes/hooks. A fixture inicial de NFTs é determinística. `localStorage` guarda o mock (`jungle-nft-mock-v1`); reset restaura tudo.
+As respostas fictícias são produzidas pelos handlers MSW, não por componentes/hooks. A fixture inicial de NFTs é determinística. `localStorage` guarda o mock (`jungle-nft-mock-v4`); reset restaura tudo. A mudança de versão reinicia dados de demonstração antigos para atualizar imagens e atributos de coleção.
 
 ## Contratos REST
 
@@ -38,6 +38,8 @@ Prefixo `/api`. Rotas privadas exigem `Authorization: Bearer <token fictício>`.
 | `/scenarios/nft-update`, `/scenarios/expire`, `/scenarios/reset` | POST | Ações de demonstração |
 
 Erros: `{ message: string, code: string }`. Quantidades são inteiras; ETH usa strings decimais calculadas por Decimal.js e apresentado com seis casas (simulação, não precisão máxima de 18 casas).
+
+No catálogo, `q`, `category`, `sort`, `page`, `minPrice` e `maxPrice` são parâmetros serializados na URL e enviados ao handler REST. Preços mínimo e máximo são comparados com os valores decimais da fixture. Para a demonstração, `recent` ordena pela sequência de identificadores e `trending` pela popularidade determinística da fixture, não por métricas reais.
 
 ## Cache, sessão e conta
 
@@ -62,7 +64,11 @@ Versões antigas/duplicadas são ignoradas. Na reconexão, queries relevantes s�
 
 ## Acessibilidade, UX e design
 
-Há labels, foco visível, mensagens `role="alert"`/`status`, skeleton com preferência de movimento reduzido, estados vazios e ações desabilitadas conforme estoque. Ainda faltam auditorias completas de acessibilidade/zoom/teclado. O Figma original não estava acessível ao autor; as artes CSS são substituições e não reproduções dos assets. Não alegar paridade visual.
+Há labels, foco visível, mensagens `role="alert"`/`status`, skeleton com preferência de movimento reduzido, estados vazios e ações desabilitadas conforme estoque. Ainda faltam auditorias completas de acessibilidade/zoom/teclado.
+
+As capturas individuais exportadas pelo candidato são a referência visual enquanto o acesso estruturado ao Figma permanece bloqueado por permissões. Os oito primeiros NFTs reutilizam quatro imagens originais incorporadas localmente; outras obras da fixture ainda usam arte CSS de demonstração. Para reduzir a variação de plataforma, a interface utiliza uma fonte monoespaçada local baseada em DejaVu Sans Mono (regular/negrito), com licença preservada em `src/assets/fonts/LICENSE-dejavu.txt`. **A família exata, pesos e medidas tipográficas do Figma ainda precisam ser confirmados na aba de inspeção do arquivo**, portanto não alegar paridade pixel a pixel.
+
+As contagens de categorias da barra lateral correspondem aos 12 NFTs da fixture, não aos números maiores da referência. Categorias sem obras aparecem indisponíveis. O newsletter, os ícones de redes sociais e os cartões editoriais são ilustrativos, pois os respectivos serviços/páginas estão fora do escopo. No desktop, o favorito de cada cartão aparece ao passar o mouse ou focar o cartão; no mobile permanece visível para preservar seu uso por toque. As opções de edição na página do NFT são metadados da fixture, não variantes de compra independentes: a API mock atual controla disponibilidade por NFT. O botão Comprar adiciona ao carrinho e inicia o fluxo de checkout simulado.
 
 ## Segurança e deployment
 

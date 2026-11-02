@@ -25,23 +25,20 @@ export function NftCard({ nft }: { nft: NFT }) {
   })
 
   return (
-    <article className="group overflow-hidden rounded-[1.25rem] bg-[#2a1a13] transition hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(0,0,0,.35)]">
-      <div className="relative">
-        <Link to="/nft/$id" params={{ id: nft.id }} aria-label={`Ver ${nft.title}`}><NftArtwork nft={nft} /></Link>
-        <button type="button" className={`absolute right-2 top-2 rounded-full border border-[#db9955] p-2 backdrop-blur ${isFavorite ? 'bg-[#dc9650] text-[#28180d]' : 'bg-[#22120bcc] text-[#dc9650]'}`}
+    <article className="group min-w-0 transition-transform duration-200 hover:-translate-y-1">
+      <div className="relative rounded-[1.35rem] bg-[#2a1913] px-1 pb-4 pt-2.5 md:rounded-md md:pt-8">
+        <Link to="/nft/$id" params={{ id: nft.id }} aria-label={`Ver ${nft.title}`} className="block overflow-hidden rounded-[1.05rem] md:rounded-sm"><NftArtwork nft={nft} /></Link>
+        <button type="button" className={`absolute right-2 top-2 flex size-8 items-center justify-center rounded-full border border-[#db9955] backdrop-blur md:size-9 md:opacity-0 md:transition-opacity md:group-hover:opacity-100 md:group-focus-within:opacity-100 ${isFavorite ? 'bg-[#dc9650] text-[#28180d] md:opacity-100' : 'bg-[#22120bcc] text-[#dc9650]'}`}
           aria-label={isFavorite ? `Remover ${nft.title} dos favoritos` : `Favoritar ${nft.title}`}
           aria-pressed={isFavorite} disabled={favorite.isPending}
-          onClick={() => user ? favorite.mutate() : navigate({ to: '/login' })}><Heart size={18} fill={isFavorite ? 'currentColor' : 'none'} /></button>
+          onClick={() => user ? favorite.mutate() : navigate({ to: '/login' })}><Heart size={17} fill={isFavorite ? 'currentColor' : 'none'} /></button>
+        {nft.rarity && <span className="absolute left-0 top-4 bg-[#db9654] px-3 py-1 text-[10px] font-bold text-[#21120a] md:hidden">{nft.rarity}</span>}
         {nft.available === 0 && <span className="absolute bottom-4 right-4 rounded-full bg-red-600 px-3 py-1 text-xs font-bold">Esgotado</span>}
       </div>
-      <div className="p-3 md:p-4">
-        <div className="flex items-start justify-between gap-2">
-          <Link to="/nft/$id" params={{ id: nft.id }} className="text-sm font-semibold leading-tight text-[#f0e8de] hover:text-[#dc9650] md:text-base">{nft.title}</Link>
-        </div>
-        <div className="mt-1 flex items-center justify-between">
-          <span className="sr-only">Preço atual</span>
-          <span className="text-sm font-black text-[#dc9650] md:text-base">{nft.priceEth} ETH</span>
-        </div>
+      <div className="px-1 pt-4">
+        <Link to="/nft/$id" params={{ id: nft.id }} className="block text-[12px] font-normal leading-5 text-[#f2e9de] hover:text-[#dc9650] sm:text-sm md:text-[16px]">{nft.title}</Link>
+        <span className="sr-only">Preço atual</span>
+        <span className="mt-0.5 block text-[14px] font-bold text-[#dc9650] md:text-lg">{nft.priceEth} ETH</span>
       </div>
     </article>
   )
