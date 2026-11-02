@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, Outlet } from '@tanstack/react-router'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { io } from 'socket.io-client'
+import type { Socket } from 'socket.io-client'
 import { ShoppingBag, UserRound, Sparkles, Menu, Wifi, WifiOff } from 'lucide-react'
 import { useAuth } from '../lib/auth'
 import { marketplaceApi } from '../lib/api'
@@ -12,34 +12,41 @@ function useRealtime(userId: string | undefined) {
   const versions = useRef(new Map<string, number>())
 
   useEffect(() => {
-    const socket = io(window.location.origin, { transports: ['websocket'], path: '/socket.io/', reconnection: true })
+    let disposed = false
+    let socket: Socket | undefined
+    setConnected(false)
     const reconcile = () => {
       setConnected(true)
       queryClient.invalidateQueries({ queryKey: ['nfts'] })
       queryClient.invalidateQueries({ queryKey: ['cart'] })
       queryClient.invalidateQueries({ queryKey: ['orders'] })
     }
-    socket.on('connect', reconcile)
-    socket.on('disconnect', () => setConnected(false))
-    socket.on('nft.updated', (event: { id: string; version: number }) => {
-      const key = `nft:${event.id}`
-      if (event.version <= (versions.current.get(key) ?? 0)) return
-      versions.current.set(key, event.version)
-      queryClient.invalidateQueries({ queryKey: ['nfts'] })
-      queryClient.invalidateQueries({ queryKey: ['nft', event.id] })
-      queryClient.invalidateQueries({ queryKey: ['cart'] })
-      queryClient.invalidateQueries({ queryKey: ['quote'] })
-    })
-    socket.on('order.updated', (event: { id: string; userId: string; version: number }) => {
-      if (event.userId !== userId) return
-      const key = `order:${event.id}`
-      if (event.version <= (versions.current.get(key) ?? 0)) return
-      versions.current.set(key, event.version)
-      queryClient.invalidateQueries({ queryKey: ['order', event.id] })
-      queryClient.invalidateQueries({ queryKey: ['orders'] })
-      queryClient.invalidateQueries({ queryKey: ['cart'] })
-    })
-    return () => { socket.removeAllListeners(); socket.disconnect(); versions.current.clear() }
+    // socket.io-client captures WebSocket on import; load it only after MSW starts.
+    void import('socket.io-client').then(({ io }) => {
+      if (disposed) return
+      socket = io(window.location.origin, { transports: ['websocket'], path: '/socket.io/', reconnection: true })
+      socket.on('connect', reconcile)
+      socket.on('disconnect', () => setConnected(false))
+      socket.on('nft.updated', (event: { id: string; version: number }) => {
+        const key = `nft:${event.id}`
+        if (event.version <= (versions.current.get(key) ?? 0)) return
+        versions.current.set(key, event.version)
+        queryClient.invalidateQueries({ queryKey: ['nfts'] })
+        queryClient.invalidateQueries({ queryKey: ['nft', event.id] })
+        queryClient.invalidateQueries({ queryKey: ['cart'] })
+        queryClient.invalidateQueries({ queryKey: ['quote'] })
+      })
+      socket.on('order.updated', (event: { id: string; userId: string; version: number }) => {
+        if (event.userId !== userId) return
+        const key = `order:${event.id}`
+        if (event.version <= (versions.current.get(key) ?? 0)) return
+        versions.current.set(key, event.version)
+        queryClient.invalidateQueries({ queryKey: ['order', event.id] })
+        queryClient.invalidateQueries({ queryKey: ['orders'] })
+        queryClient.invalidateQueries({ queryKey: ['cart'] })
+      })
+    }).catch(() => { if (!disposed) setConnected(false) })
+    return () => { disposed = true; socket?.removeAllListeners(); socket?.disconnect(); versions.current.clear() }
   }, [queryClient, userId])
 
   return connected
