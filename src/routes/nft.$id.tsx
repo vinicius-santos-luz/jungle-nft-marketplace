@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ArrowLeft, Heart, Mail, Minus, Plus, ShoppingCart, Star } from "lucide-react";
+import { ArrowLeft, Heart, Mail, Minus, Plus, Star } from "lucide-react";
 import { marketplaceApi, messageFromError } from "../lib/api";
 import type { NFT } from "../lib/models";
 import { useAuth } from "../lib/auth";
@@ -345,16 +345,6 @@ function NFTDetails() {
                   className="flex min-h-[64px] min-w-0 flex-1 items-center justify-center rounded-xl bg-[#D58B4B] px-4 font-mono text-lg font-bold uppercase text-[#160D09] transition-colors hover:bg-[#E9A260] disabled:cursor-not-allowed disabled:opacity-50 md:min-h-[60px] xl:flex-[2]"
                 >
                   {add.isPending ? "Adicionando…" : "COMPRAR"}
-                </button>
-                <button
-                  type="button"
-                  aria-label="Add to cart"
-                  title="Adicionar ao carrinho"
-                  disabled={!canPurchase || add.isPending}
-                  onClick={() => add.mutate("cart")}
-                  className="flex size-[64px] shrink-0 items-center justify-center rounded-xl border-2 border-[#D58B4B] bg-[#160D09] text-[#D58B4B] transition-colors hover:bg-[#39231A] disabled:cursor-not-allowed disabled:opacity-50 md:size-[60px]"
-                >
-                  <ShoppingCart size={26} />
                 </button>
                 <button
                   type="button"
