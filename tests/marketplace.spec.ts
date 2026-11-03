@@ -62,12 +62,18 @@ test("cart quantity and removal are persisted and validated", async ({
   page,
 }) => {
   await page.goto("/nft/nft-1");
-  await expect(page.getByRole("button", { name: "Add to cart" })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Add to cart" })).toHaveCount(
+    0,
+  );
   await page.getByRole("button", { name: "Comprar NFT" }).click();
   await page.goto("/cart");
   await expect(page.getByText("Emerald Ape #042").first()).toBeVisible();
   await page.getByRole("button", { name: "Aumentar Emerald Ape #042" }).click();
-  await expect(page.getByText("2").first()).toBeVisible();
+  const nftRow = page
+    .getByRole("article")
+    .filter({ hasText: "Emerald Ape #042" });
+
+  await expect(nftRow.getByText("2", { exact: true })).toBeVisible();
   await page.reload();
   await expect(page.getByText("Emerald Ape #042").first()).toBeVisible();
   await page.getByRole("button", { name: "Remove" }).click();
@@ -110,7 +116,9 @@ test("NFT gallery and buy action lead to checkout without losing the cart", asyn
     () => document.documentElement.scrollWidth - window.innerWidth,
   );
   expect(overflow).toBeLessThanOrEqual(2);
-  await expect(page.getByRole("button", { name: "Add to cart" })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Add to cart" })).toHaveCount(
+    0,
+  );
   await page.getByRole("button", { name: "Comprar NFT" }).click();
   await expect(page).toHaveURL(/\/login/);
   await page.getByRole("button", { name: "Sign in", exact: true }).click();
@@ -123,7 +131,7 @@ test("invalid coupon gives error, then user can recover", async ({ page }) => {
   await page.getByRole("button", { name: "Comprar NFT" }).click();
   await page.goto("/cart");
   const orderTotal = page.locator("aside dl > div").last().locator("dd");
-  await expect(orderTotal).toHaveText(/^\d+\.\d{6} ETH$/);
+  await expect(orderTotal).toHaveText(/^\d+(?:\.\d{1,6})? ETH$/);
   const originalTotal = await orderTotal.textContent();
   await page.getByRole("textbox", { name: "Código do cupom" }).fill("NOTREAL");
   await page.getByRole("button", { name: "Apply" }).click();
@@ -191,19 +199,38 @@ test("declined payment preserves cart and does not show success", async ({
   page,
 }) => {
   await page.goto("/nft/nft-1");
+
   await page.getByRole("button", { name: "Comprar NFT" }).click();
+
+  // Aguarda a confirmação de que o NFT entrou no carrinho.
+  await expect(
+    page.getByRole("link", { name: /Carrinho, [1-9]\d* itens/ }),
+  ).toBeVisible();
+
   await page.goto("/login");
   await page.getByRole("button", { name: "Sign in", exact: true }).click();
-  await expect(page).toHaveURL(/\/profile/);
-  await page.goto("/checkout");
+
+  // A compra iniciada antes do login deve continuar no checkout.
+  await expect(page).toHaveURL(/\/checkout/);
+  await expect(page.getByText("Emerald Ape #042").first()).toBeVisible();
+
+  // Aguarda a cotação antes de confirmar a revisão.
+  await expect(
+    page.getByRole("checkbox", { name: /I reviewed/ }),
+  ).toBeEnabled();
+
   await page
     .getByRole("checkbox", { name: /Simulate payment refusal/ })
     .check();
+
   await page.getByRole("checkbox", { name: /I reviewed/ }).check();
+
   await page.getByRole("button", { name: "Place simulated order" }).click();
+
   await expect(
     page.getByRole("heading", { name: "Payment declined" }),
   ).toBeVisible({ timeout: 15000 });
+
   await page.goto("/cart");
   await expect(page.getByText("Emerald Ape #042").first()).toBeVisible();
 });

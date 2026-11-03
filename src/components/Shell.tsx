@@ -91,6 +91,7 @@ export function Shell() {
   });
   const isNftDetail = pathname.startsWith("/nft/");
   const isHome = pathname === "/";
+  const isMarketActive = isNftDetail || pathname === "/cart";
   const navigate = useNavigate();
   const [headerSearchOpen, setHeaderSearchOpen] = useState(false);
   const [headerDraft, setHeaderDraft] = useState("");
@@ -113,7 +114,7 @@ export function Shell() {
     cart.data?.items.reduce((sum, item) => sum + item.quantity, 0) ?? 0;
   return (
     <div
-      className={`min-h-screen bg-[#130c09] text-[#f8eee5] md:pb-0 ${isNftDetail ? "pb-0" : "pb-24"} py-3`}
+      className={`min-h-screen bg-[#130c09] text-[#f8eee5] md:pb-0 ${isMarketActive ? "pb-0" : "pb-24"} py-3`}
     >
       <header className="relative z-30 hidden bg-[#140D0A] md:block">
         <div className="mx-auto flex max-w-[1200px] items-center justify-between gap-4 border-b border-[#563a29] px-6 xl:px-0">
@@ -136,7 +137,7 @@ export function Shell() {
             <Link
               to="/"
               hash="explore"
-              className={`flex self-stretch items-center border-b-2 ${isNftDetail
+              className={`flex self-stretch items-center border-b-2 ${isMarketActive
                 ? "border-[#df9b55] font-bold text-[#df9b55]"
                 : "border-transparent hover:text-[#df9b55]"
                 }`}

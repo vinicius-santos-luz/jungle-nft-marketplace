@@ -78,10 +78,37 @@ export function initialStore(): Store {
 export function getStore(): Store {
   try {
     const raw = localStorage.getItem(KEY);
-    if (raw) return JSON.parse(raw) as Store;
+
+    if (raw) {
+      const store = JSON.parse(raw) as Store;
+
+      let updated = false;
+
+      store.nfts = store.nfts.map((nft) => {
+        const seed = seedNfts.find((item) => item.id === nft.id);
+
+        if (seed?.tokenNumber && nft.tokenNumber !== seed.tokenNumber) {
+          updated = true;
+
+          return {
+            ...nft,
+            tokenNumber: seed.tokenNumber,
+          };
+        }
+
+        return nft;
+      });
+
+      if (updated) {
+        saveStore(store);
+      }
+
+      return store;
+    }
   } catch {
     /* Invalid local fixture state: restore the seed. */
   }
+
   const state = initialStore();
   saveStore(state);
   return state;
@@ -172,7 +199,9 @@ export function makeQuote(
       ? subtotal.times("0.1")
       : new Decimal(0);
   const networkFee =
-    network === "Ethereum" ? new Decimal("0.005") : new Decimal("0.001");
+    network === "Ethereum" ? new Decimal("0.016") : new Decimal("0.001");
+  new Decimal("0.001");
+  new Decimal("0.001");
   const total = subtotal.minus(discount).plus(networkFee);
   const revision =
     JSON.stringify(
