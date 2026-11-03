@@ -62,8 +62,8 @@ test("cart quantity and removal are persisted and validated", async ({
   page,
 }) => {
   await page.goto("/nft/nft-1");
-  await page.getByRole("button", { name: "Add to cart" }).click();
-  await expect(page.getByRole("status")).toContainText("added");
+  await expect(page.getByRole("button", { name: "Add to cart" })).toHaveCount(0);
+  await page.getByRole("button", { name: "Comprar NFT" }).click();
   await page.goto("/cart");
   await expect(page.getByText("Emerald Ape #042").first()).toBeVisible();
   await page.getByRole("button", { name: "Aumentar Emerald Ape #042" }).click();
@@ -78,8 +78,7 @@ test("full purchase completes to receipt without real payment", async ({
   page,
 }) => {
   await page.goto("/nft/nft-1");
-  await page.getByRole("button", { name: "Add to cart" }).click();
-  await expect(page.getByRole("status")).toContainText("added");
+  await page.getByRole("button", { name: "Comprar NFT" }).click();
   await page.goto("/login");
   await page.getByRole("button", { name: "Sign in", exact: true }).click();
   await expect(page).toHaveURL(/\/profile/);
@@ -111,6 +110,7 @@ test("NFT gallery and buy action lead to checkout without losing the cart", asyn
     () => document.documentElement.scrollWidth - window.innerWidth,
   );
   expect(overflow).toBeLessThanOrEqual(2);
+  await expect(page.getByRole("button", { name: "Add to cart" })).toHaveCount(0);
   await page.getByRole("button", { name: "Comprar NFT" }).click();
   await expect(page).toHaveURL(/\/login/);
   await page.getByRole("button", { name: "Sign in", exact: true }).click();
@@ -120,8 +120,7 @@ test("NFT gallery and buy action lead to checkout without losing the cart", asyn
 
 test("invalid coupon gives error, then user can recover", async ({ page }) => {
   await page.goto("/nft/nft-1");
-  await page.getByRole("button", { name: "Add to cart" }).click();
-  await expect(page.getByRole("status")).toContainText("added");
+  await page.getByRole("button", { name: "Comprar NFT" }).click();
   await page.goto("/cart");
   const orderTotal = page.locator("aside dl > div").last().locator("dd");
   await expect(orderTotal).toHaveText(/^\d+\.\d{6} ETH$/);
@@ -192,8 +191,7 @@ test("declined payment preserves cart and does not show success", async ({
   page,
 }) => {
   await page.goto("/nft/nft-1");
-  await page.getByRole("button", { name: "Add to cart" }).click();
-  await expect(page.getByRole("status")).toContainText("added");
+  await page.getByRole("button", { name: "Comprar NFT" }).click();
   await page.goto("/login");
   await page.getByRole("button", { name: "Sign in", exact: true }).click();
   await expect(page).toHaveURL(/\/profile/);
@@ -232,8 +230,7 @@ test("live price update invalidates quote and requires fresh review", async ({
   page,
 }) => {
   await page.goto("/nft/nft-1");
-  await page.getByRole("button", { name: "Add to cart" }).click();
-  await expect(page.getByRole("status")).toContainText("added");
+  await page.getByRole("button", { name: "Comprar NFT" }).click();
   await page.goto("/login");
   await page.getByRole("button", { name: "Sign in", exact: true }).click();
   await expect(page).toHaveURL(/\/profile/);
