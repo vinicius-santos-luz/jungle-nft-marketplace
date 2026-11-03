@@ -161,7 +161,12 @@ export const seedNfts: NFT[] = descriptors.map((entry, index) => ({
   total: index === 0 ? 50 : index % 3 === 0 ? 5 : 20,
   version: 1,
   popularity: [100, 76, 94, 67, 81, 72, 91, 65, 59, 70, 88, 62][index],
+
   ...(index === 2 ? { rarity: "RARO" } : {}),
+
+  ...(index === 4 ? { tokenNumber: "0009" } : {}),
+  ...(index === 5 ? { tokenNumber: "0552" } : {}),
+
   ...(index === 0
     ? {
         tokenNumber: "0042",
