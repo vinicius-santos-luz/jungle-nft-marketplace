@@ -36,9 +36,9 @@ O build gera `dist/`; publique essa pasta e configure fallback de rotas SPA para
 
 ## Contas fictícias
 
-| Email | Senha |
-|---|---|
-| `demo@jungle.test` | `Demo1234!` |
+| Email              | Senha        |
+| ------------------ | ------------ |
+| `demo@jungle.test` | `Demo1234!`  |
 | `test@jungle.test` | `Teste1234!` |
 
 As senhas são comparadas com hash SHA-256 no mock, sem armazenar o texto claro. Isso **não** representa autenticação de produção.
