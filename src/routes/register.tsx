@@ -17,7 +17,7 @@ function RegisterPage() {
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault(); setError(''); setPending(true)
     try {
-      await register(name,email,password)
+      await register(name, email, password)
       const target = sessionStorage.getItem('jungle-resume-path') || '/profile'
       sessionStorage.removeItem('jungle-resume-path')
       if (target === '/checkout') await navigate({ to: '/checkout', replace: true })
@@ -29,6 +29,6 @@ function RegisterPage() {
   }
 
   return <main className="mx-auto max-w-md px-6 py-20"><div className="text-center"><span className="pill">Join the community</span><h1 className="mt-5 text-4xl font-extrabold">Create account</h1><p className="mt-3 text-slate-400">Your digital art journey starts here.</p></div>
-    <form onSubmit={submit} className="panel mt-9 space-y-5 p-7"><label className="block text-sm font-medium">Full name<input className="field mt-2" required minLength={2} autoComplete="name" value={name} onChange={e=>setName(e.target.value)}/></label><label className="block text-sm font-medium">Email<input className="field mt-2" type="email" required autoComplete="email" value={email} onChange={e=>setEmail(e.target.value)}/></label><label className="block text-sm font-medium">Password<input className="field mt-2" type="password" minLength={8} required autoComplete="new-password" value={password} onChange={e=>setPassword(e.target.value)}/><span className="mt-1 block text-xs text-slate-400">At least 8 characters.</span></label>{error && <p role="alert" className="text-sm text-red-300">{error}</p>}<button type="submit" className="btn-primary w-full" disabled={pending}>{pending ? 'Creating…' : 'Create account'}</button><p className="text-center text-sm text-slate-400">Already registered? <Link to="/login" className="text-violet-300 underline">Sign in</Link></p></form>
+    <form onSubmit={submit} className="panel mt-9 space-y-5 p-7"><label className="block text-sm font-medium">Full name<input className="field mt-2" required minLength={2} autoComplete="name" value={name} onChange={e => setName(e.target.value)} /></label><label className="block text-sm font-medium">Email<input className="field mt-2" type="email" required autoComplete="email" value={email} onChange={e => setEmail(e.target.value)} /></label><label className="block text-sm font-medium">Password<input className="field mt-2" type="password" minLength={8} required autoComplete="new-password" value={password} onChange={e => setPassword(e.target.value)} /><span className="mt-1 block text-xs text-slate-400">At least 8 characters.</span></label>{error && <p role="alert" className="text-sm text-red-300">{error}</p>}<button type="submit" className="btn-primary w-full" disabled={pending}>{pending ? 'Creating…' : 'Create account'}</button><p className="text-center text-sm text-slate-400">Already registered? <Link to="/login" className="text-violet-300 underline">Sign in</Link></p></form>
   </main>
 }

@@ -25,17 +25,17 @@ As respostas fictícias são produzidas pelos handlers MSW, não por componentes
 
 Prefixo `/api`. Rotas privadas exigem `Authorization: Bearer <token fictício>`.
 
-| Recurso | Métodos | Erros relevantes |
-|---|---|---|
-| `/nfts`, `/nfts/:id` | GET | Busca/filtros/ordenação/paginação; 404 |
-| `/auth/login`, `/auth/register`, `/auth/session`, `/auth/logout` | POST/GET | 401, 409, 422 |
-| `/cart`, `/cart/:id` | GET/POST/PATCH/DELETE | Quantidade; 404, 409, 422 |
-| `/quote` | POST | Cupom/rede/carrinho; 409 |
-| `/favorites`, `/favorites/:id` | GET/POST/DELETE | 401/404 |
-| `/profile`, `/profile/password` | GET/PATCH | 401/409/422 |
-| `/wallets`, `/wallets/:id` | GET/POST/PATCH | 401/404/422 |
-| `/orders`, `/orders/:id` | GET/POST | `Idempotency-Key`; 401/404/409/422 |
-| `/scenarios/nft-update`, `/scenarios/expire`, `/scenarios/reset` | POST | Ações de demonstração |
+| Recurso                                                          | Métodos               | Erros relevantes                       |
+| ---------------------------------------------------------------- | --------------------- | -------------------------------------- |
+| `/nfts`, `/nfts/:id`                                             | GET                   | Busca/filtros/ordenação/paginação; 404 |
+| `/auth/login`, `/auth/register`, `/auth/session`, `/auth/logout` | POST/GET              | 401, 409, 422                          |
+| `/cart`, `/cart/:id`                                             | GET/POST/PATCH/DELETE | Quantidade; 404, 409, 422              |
+| `/quote`                                                         | POST                  | Cupom/rede/carrinho; 409               |
+| `/favorites`, `/favorites/:id`                                   | GET/POST/DELETE       | 401/404                                |
+| `/profile`, `/profile/password`                                  | GET/PATCH             | 401/409/422                            |
+| `/wallets`, `/wallets/:id`                                       | GET/POST/PATCH        | 401/404/422                            |
+| `/orders`, `/orders/:id`                                         | GET/POST              | `Idempotency-Key`; 401/404/409/422     |
+| `/scenarios/nft-update`, `/scenarios/expire`, `/scenarios/reset` | POST                  | Ações de demonstração                  |
 
 Erros: `{ message: string, code: string }`. Quantidades são inteiras; ETH usa strings decimais calculadas por Decimal.js e apresentado com seis casas (simulação, não precisão máxima de 18 casas).
 

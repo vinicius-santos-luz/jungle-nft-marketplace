@@ -54,7 +54,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // Local logout still succeeds when the network is unavailable.
       }
     },
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }), [token, session.data, session.isSuccess, session.isPending, queryClient])
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

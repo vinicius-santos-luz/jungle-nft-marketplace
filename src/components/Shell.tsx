@@ -23,6 +23,7 @@ import {
   X,
 } from "lucide-react";
 import { useAuth } from "../lib/auth";
+import { LogOut } from 'lucide-react';
 import { marketplaceApi } from "../lib/api";
 function useRealtime(userId: string | undefined) {
   const queryClient = useQueryClient();
@@ -110,7 +111,7 @@ export function Shell() {
   });
   const count =
     cart.data?.items.reduce((sum, item) => sum + item.quantity, 0) ?? 0;
-return (
+  return (
     <div
       className={`min-h-screen bg-[#130c09] text-[#f8eee5] md:pb-0 ${isNftDetail ? "pb-0" : "pb-24"} py-3`}
     >
@@ -188,8 +189,12 @@ return (
                 {user.name.split(" ")[0]}
               </Link>
             ) : (
-              <Link to="/login" className="btn-primary text-sm">
-                Entrar
+              <Link
+                to="/login"
+                className="inline-flex h-11 items-center justify-center gap-2.5 rounded-xl bg-[#D88B4A] px-5 text-sm font-semibold text-[#1A100B] transition-colors hover:bg-[#E9A260]"
+              >
+                <LogOut size={20} strokeWidth={2.5} aria-hidden="true" />
+                <span>Entrar</span>
               </Link>
             )}
           </div>
@@ -227,20 +232,20 @@ return (
           </form>
         )}
       </header>
-        <div className="fixed bottom-[92px] left-2 z-50 opacity-70 hover:opacity-100 md:bottom-2">
-          <label className="text-[11px] text-[#c1a48b]">
-            <span className="sr-only">Simular condição de rede</span>
-            <select
-              aria-label="Simular condição de rede"
-              value={networkMode}
-              onChange={(event) => changeNetworkMode(event.target.value)}
-              className="rounded border border-[#563a29] bg-[#291913] px-2 py-1 text-[11px] text-[#c1a48b]"
-            >
-              <option value="normal">Rede normal</option>
-              <option value="error">Simular erro HTTP 503</option>
-            </select>
-          </label>
-        </div>
+      <div className="fixed bottom-[92px] left-2 z-50 opacity-70 hover:opacity-100 md:bottom-2">
+        <label className="text-[11px] text-[#c1a48b]">
+          <span className="sr-only">Simular condição de rede</span>
+          <select
+            aria-label="Simular condição de rede"
+            value={networkMode}
+            onChange={(event) => changeNetworkMode(event.target.value)}
+            className="rounded border border-[#563a29] bg-[#291913] px-2 py-1 text-[11px] text-[#c1a48b]"
+          >
+            <option value="normal">Rede normal</option>
+            <option value="error">Simular erro HTTP 503</option>
+          </select>
+        </label>
+      </div>
       <Outlet />
       <nav
         className={`fixed inset-x-0 bottom-0 z-40 h-[88px] grid-cols-4 items-center rounded-t-[2rem] border-t border-[#523524] bg-[#25150f] px-5 text-[#ddb085] shadow-2xl md:hidden ${isNftDetail ? "hidden" : "grid"}`}
@@ -285,8 +290,7 @@ return (
                 Segurança da carteira
               </h3>
               <p className="mt-2 text-[12px] leading-relaxed">
-                Proteja sua carteira. Esta versão usa compras e pagamentos
-                simulados, sem valores reais.
+                Proteja sal carteira e colecione arte digital verificada com confiança.
               </p>
             </div>
             <div className="md:border-r md:border-[#704530] md:px-6">
@@ -297,8 +301,7 @@ return (
                 Criadores em destaque
               </h3>
               <p className="mt-2 text-[12px] leading-relaxed">
-                Conheça artistas e coleções digitais selecionadas para a
-                demonstração KURIO.
+                Conheça artistas, estúdios e comunidades que moldam a cultura digital na rede.
               </p>
             </div>
             <div className="md:border-r md:border-[#704530] md:px-6">
@@ -309,8 +312,7 @@ return (
                 Alertas de lançamentos
               </h3>
               <p className="mt-2 text-[12px] leading-relaxed">
-                Receba atualizações sobre mudanças no catálogo por meio de
-                eventos simulados.
+                Receba calendários de cunhagem, novidades de listas de acesso e análises do mercado
               </p>
             </div>
             <div className="md:pl-6">
@@ -334,8 +336,7 @@ return (
                 </button>
               </div>
               <p className="mt-3 text-[11px] leading-relaxed">
-                Newsletter ilustrativa; inscrições não estão habilitadas nesta
-                demonstração.
+                Receba lançamento selecionados, histórias de criadores e novidades do mercado.
               </p>
             </div>
           </div>
