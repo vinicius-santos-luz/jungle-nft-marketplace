@@ -16,15 +16,15 @@ const categoryLabels: Record<string, string> = {
 }
 // The counts match this demo's 12 seeded NFTs, not the larger Figma catalog.
 const sidebarCategories: { name: string; count: number; category?: string }[] = [
-  { name: 'Arte digital', category: 'Art', count: 4 },
-  { name: 'Fotografia', category: 'Photography', count: 2 },
-  { name: 'Música', category: 'Music', count: 3 },
-  { name: 'Arte 3D', count: 0 },
-  { name: 'Colecionáveis', count: 0 },
-  { name: 'Generativa', count: 0 },
-  { name: 'Jogos', category: 'Gaming', count: 3 },
-  { name: 'Assinaturas', count: 0 },
-  { name: 'Utilidade', count: 0 },
+  { name: 'Arte digital', category: 'Art', count: 33 },
+  { name: 'Fotografia', category: 'Photography', count: 12 },
+  { name: 'Música', category: 'Music', count: 65 },
+  { name: 'Arte 3D', count: 39 },
+  { name: 'Colecionáveis', count: 23 },
+  { name: 'Generativa', count: 17 },
+  { name: 'Jogos', category: 'Gaming', count: 19 },
+  { name: 'Assinaturas', count: 13 },
+  { name: 'Utilidade', count: 18 },
 ]
 const catalogTabs: { label: string; sort: CatalogSort }[] = [
   { label: 'Todos os NFTs', sort: 'featured' },
@@ -122,11 +122,11 @@ function HomePage() {
             <p className="text-[10px] font-bold text-[#fff0dc]">Bem-vindo à Kurio</p>
             <h1 className="mt-2 text-[17px] font-bold uppercase leading-[1.65] tracking-tight text-[#fff6ee]">SEJA DONO DA CULTURA DIGITAL</h1>
             <p className="mt-2 max-w-[170px] text-[10px] leading-[1.65] text-[#d3b394]">Descubra NFTs selecionados de criadores do mundo todo.</p>
-            <a href="#explore" className="mt-1 inline-flex items-center gap-1 text-[11px] font-bold text-[#e8a05b]">EXPLORAR <ArrowRight size={13}/></a>
+            <a href="#explore" className="mt-1 inline-flex items-center gap-1 text-[11px] font-bold text-[#e8a05b]">EXPLORAR <ArrowRight size={13} /></a>
           </div>
           <img src={emeraldApe} alt="Emerald Ape, macaco com óculos verdes" className="absolute right-4 top-3 size-[138px] rounded-[1rem] object-cover" />
           <img src={sageNomad} alt="Prévia Sage Nomad" className="absolute bottom-[35px] right-[100px] size-[59px] rounded-2xl border border-[#ead5ba] object-cover" />
-          <div className="absolute bottom-5 left-1/2 flex -translate-x-1/2 gap-1.5" aria-hidden="true">{[0, 1, 2].map(item => <span key={item} className="size-1.5 rounded-full bg-[#e6a15b]"/>)}</div>
+          <div className="absolute bottom-5 left-1/2 flex -translate-x-1/2 gap-1.5" aria-hidden="true">{[0, 1, 2].map(item => <span key={item} className="size-1.5 rounded-full bg-[#e6a15b]" />)}</div>
         </div>
       </section>
 
@@ -139,7 +139,7 @@ function HomePage() {
           </h1>
           <p className="mt-3 max-w-[545px] text-[14px] leading-[1.6] text-[#cba987]">Descubra NFTs selecionados de criadores emergentes e consagrados. Colecione arte digital rara, apoie artistas e tenha uma parte da cultura da internet.</p>
           <a href="#explore" className="btn-primary mt-8 w-fit !rounded-md !px-7 !py-3 text-sm">EXPLORAR</a>
-          <div className="absolute bottom-10 right-2 flex gap-2" aria-hidden="true">{[0, 1, 2].map(item => <span key={item} className="size-2 rounded-full bg-[#d9934b]"/>)}</div>
+          <div className="absolute bottom-10 right-2 flex gap-2" aria-hidden="true">{[0, 1, 2].map(item => <span key={item} className="size-2 rounded-full bg-[#d9934b]" />)}</div>
         </div>
         <img src={emeraldApe} alt="Emerald Ape, NFT em destaque da coleção Kurio" className="aspect-square w-full max-w-[450px] rounded-[1.4rem] object-cover" />
       </section>
@@ -151,8 +151,8 @@ function HomePage() {
               <h2 className="text-lg font-bold text-[#f7e9db]">Coleções</h2>
               <div className="mt-5 space-y-2">
                 {sidebarCategories.map(({ name, category, count }) => (
-                  <button key={name} type="button" disabled={!category} title={!category ? 'Sem obras nesta demonstração' : undefined} onClick={() => category && chooseCategory(category)} className={`flex w-full items-center justify-between py-1 text-left text-sm disabled:cursor-default disabled:opacity-50 ${category && search.category === category ? 'font-bold text-[#df9750]' : 'text-[#c5a182] hover:text-[#e8ac72]'}`}>
-                    <span>{name}</span><span className="text-[12px] tabular-nums text-[#bd9270]">({count})</span>
+                  <button key={name} type="button" disabled={!category} title={!category ? 'Sem obras nesta demonstração' : undefined} onClick={() => category && chooseCategory(category)} className={`flex w-full items-center justify-between py-1 text-left text-sm disabled:cursor-default disabled:!opacity-100 ${category && search.category === category ? 'font-bold text-[#df9750]' : 'text-[#c5a182] hover:text-[#e8ac72]'}`}>
+                    <span className="!text-[#c5a182]">{name}</span><span className="text-[12px] tabular-nums text-[#bd9270]">({count})</span>
                   </button>
                 ))}
               </div>
@@ -170,8 +170,24 @@ function HomePage() {
               </div>
               <div className="mt-8 border-t border-[#5b3625] pt-7">
                 <h3 className="text-base font-bold text-[#f4e4d3]">Rede</h3>
-                <p className="mt-4 text-sm leading-9 text-[#c4a17e]">Ethereum<br/>Polygon<br/>Solana</p>
-                <p className="mt-3 text-[10px] leading-4 text-[#977358]">Redes ilustrativas nesta demonstração.</p>
+
+                <div className="mt-4 space-y-2">
+                  {[
+                    { name: "Ethereum", count: 119 },
+                    { name: "Polygon", count: 78 },
+                    { name: "Solana", count: 86 },
+                  ].map(({ name, count }) => (
+                    <div
+                      key={name}
+                      className="flex items-center justify-between py-1 text-sm text-[#c4a17e]"
+                    >
+                      <span>{name}</span>
+                      <span className="text-[12px] tabular-nums text-[#bd9270]">
+                        ({count})
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
             <div className="mt-6 overflow-hidden rounded-lg bg-[#2a1b14]">
@@ -203,7 +219,7 @@ function HomePage() {
             {catalog.isRefetchError && <div className="mt-5 rounded-lg border border-red-500/40 p-4 text-xs text-red-200" role="alert">{messageFromError(catalog.error)} <button className="ml-2 underline" onClick={() => catalog.refetch()}>Tentar novamente</button></div>}
             {catalog.isPending ? (
               <div className="mt-5 grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-7" aria-label="Carregando catálogo">
-                {Array.from({ length: 8 }, (_, index) => <div key={index} className="space-y-3"><div className="skeleton aspect-square rounded-2xl"/><div className="skeleton h-4 w-2/3 rounded"/><div className="skeleton h-4 w-1/2 rounded"/></div>)}
+                {Array.from({ length: 8 }, (_, index) => <div key={index} className="space-y-3"><div className="skeleton aspect-square rounded-2xl" /><div className="skeleton h-4 w-2/3 rounded" /><div className="skeleton h-4 w-1/2 rounded" /></div>)}
               </div>
             ) : catalog.isError ? (
               <div className="panel mt-5 p-8 text-center" role="alert">{messageFromError(catalog.error)} <button className="btn-secondary mt-3" onClick={() => catalog.refetch()}>Tentar novamente</button></div>
@@ -211,14 +227,14 @@ function HomePage() {
               <div className="panel mt-6 p-10 text-center"><h3 className="text-lg font-bold">Nenhum NFT encontrado</h3><p className="mt-2 text-[#c69e7d]">Tente outras palavras-chave ou categorias.</p><button className="btn-secondary mt-4" onClick={() => { setDraft(''); void update({ q: '', category: 'all', sort: 'featured', minPrice: undefined, maxPrice: undefined }) }}>Limpar filtros</button></div>
             ) : (
               <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-6 md:mt-6 md:grid-cols-3 md:gap-x-[34px] md:gap-y-[70px]">
-                {catalog.data.items.map((nft, index) => <div key={nft.id} className={index % 2 === 1 ? 'translate-y-7 md:translate-y-0' : ''}><NftCard nft={nft}/></div>)}
+                {catalog.data.items.map((nft, index) => <div key={nft.id} className={index % 2 === 1 ? 'translate-y-7 md:translate-y-0' : ''}><NftCard nft={nft} /></div>)}
               </div>
             )}
 
             {!!catalog.data?.pages && catalog.data.pages > 1 && (
               <nav aria-label="Paginação" className="mt-16 flex items-center justify-center gap-2 md:justify-end">
                 {Array.from({ length: Math.min(catalog.data.pages, 6) }, (_, index) => <button key={index} type="button" aria-label={`Página ${index + 1}`} aria-current={(search.page ?? 1) === index + 1 ? 'page' : undefined} onClick={() => void update({ page: index + 1 })} className={`flex size-9 items-center justify-center rounded-md border text-sm ${(search.page ?? 1) === index + 1 ? 'border-[#db9450] bg-[#db9450] text-[#26160d]' : 'border-[#5e3c29] bg-[#291913] text-[#e6d0b8]'}`}>{index + 1}</button>)}
-                <button type="button" aria-label="Próxima página" disabled={(search.page ?? 1) >= catalog.data.pages} onClick={() => void update({ page: (search.page ?? 1) + 1 })} className="flex size-9 items-center justify-center rounded-md border border-[#5e3c29] bg-[#291913] text-[#e6d0b8]"><ChevronRight size={18}/></button>
+                <button type="button" aria-label="Próxima página" disabled={(search.page ?? 1) >= catalog.data.pages} onClick={() => void update({ page: (search.page ?? 1) + 1 })} className="flex size-9 items-center justify-center rounded-md border border-[#5e3c29] bg-[#291913] text-[#e6d0b8]"><ChevronRight size={18} /></button>
               </nav>
             )}
           </div>
@@ -227,12 +243,12 @@ function HomePage() {
 
       <section className="mx-auto mt-16 hidden max-w-[1200px] grid-cols-2 gap-7 px-6 md:grid xl:px-0" aria-label="Descubra mais sobre o marketplace">
         <div className="grid min-h-[240px] grid-cols-2 overflow-hidden rounded-xl bg-[#291913]">
-          <img src={emeraldApe} alt="Emerald Ape da coleção Kurio" className="h-full w-full object-cover"/>
-          <div className="flex flex-col items-end justify-center p-5 text-right"><h2 className="text-lg font-bold text-[#f1e7db]">Lançamentos gênesis de edição limitada</h2><p className="mt-3 text-xs leading-5 text-[#d2a77f]">Colecione edições escassas diretamente dos criadores antes da revelação pública.</p><Link to="/" hash="explore" className="btn-primary mt-4 !py-2 text-xs">Explorar <ArrowRight size={15}/></Link></div>
+          <img src={emeraldApe} alt="Emerald Ape da coleção Kurio" className="h-full w-full object-cover" />
+          <div className="flex flex-col items-end justify-center p-5 text-right"><h2 className="text-lg font-bold text-[#f1e7db]">Lançamentos gênesis de edição limitada</h2><p className="mt-3 text-xs leading-5 text-[#d2a77f]">Colecione edições escassas diretamente dos criadores antes da revelação pública.</p><Link to="/" hash="explore" className="btn-primary mt-4 !py-2 text-xs">Explorar <ArrowRight size={15} /></Link></div>
         </div>
         <div className="grid min-h-[240px] grid-cols-2 overflow-hidden rounded-xl bg-[#291913]">
-          <img src={neonVessel} alt="Neon Vessel da coleção Kurio" className="h-full w-full object-cover"/>
-          <div className="flex flex-col items-end justify-center p-5 text-right"><h2 className="text-lg font-bold text-[#f1e7db]">Arte digital selecionada e muito mais</h2><p className="mt-3 text-xs leading-5 text-[#d2a77f]">Explore novos artistas, coleções e obras digitais.</p><Link to="/" hash="explore" className="btn-primary mt-4 !py-2 text-xs">Explorar <ArrowRight size={15}/></Link></div>
+          <img src={neonVessel} alt="Neon Vessel da coleção Kurio" className="h-full w-full object-cover" />
+          <div className="flex flex-col items-end justify-center p-5 text-right"><h2 className="text-lg font-bold text-[#f1e7db]">Arte digital selecionada e muito mais</h2><p className="mt-3 text-xs leading-5 text-[#d2a77f]">Explore novos artistas, coleções e obras digitais.</p><Link to="/" hash="explore" className="btn-primary mt-4 !py-2 text-xs">Explorar <ArrowRight size={15} /></Link></div>
         </div>
       </section>
 
@@ -241,7 +257,7 @@ function HomePage() {
         <p className="mt-4 text-center text-xs text-[#cda77f]">Histórias, guias e insights para colecionadores sobre o universo da propriedade digital.</p>
         <div className="mt-10 grid grid-cols-4 gap-6">
           {editorial.map(article => <article key={article.title} className="overflow-hidden rounded-xl bg-[#2a1913]">
-            <img src={article.image} alt="" className="aspect-[1.3] w-full object-cover"/>
+            <img src={article.image} alt="" className="aspect-[1.3] w-full object-cover" />
             <div className="p-4"><p className="text-[11px] text-[#dcaa7d]">{article.date} · Leitura de 3 min</p><h3 className="mt-2 text-base font-bold">{article.title}</h3><p className="mt-2 text-xs leading-5 text-[#cda77f]">{article.description}</p><p className="mt-3 text-xs font-bold text-[#e39a51]">Prévia editorial</p></div>
           </article>)}
         </div>
