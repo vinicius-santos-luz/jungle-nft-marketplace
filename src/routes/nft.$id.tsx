@@ -126,15 +126,26 @@ function NFTDetails() {
   if (nftQuery.isPending)
     return (
       <main
-        className="mx-auto grid max-w-7xl gap-8 px-6 py-12 md:grid-cols-2"
+        className="mx-auto max-w-7xl pb-2 md:min-h-[1530px] md:px-8 md:pt-6 lg:px-10"
         aria-label="Carregando detalhes do NFT"
+        aria-busy="true"
       >
-        <div className="skeleton aspect-square rounded-3xl" />
-        <div className="space-y-6">
-          <div className="skeleton h-12 rounded-lg" />
-          <div className="skeleton h-48 rounded-lg" />
-          <div className="skeleton h-20 rounded-lg" />
+        <div className="mb-6 hidden h-4 items-center md:flex" aria-hidden="true">
+          <div className="skeleton h-3 w-56 rounded" />
         </div>
+
+        <section className="mx-auto max-w-[440px] overflow-hidden rounded-[1.8rem] bg-[#281810] md:grid md:max-w-none md:grid-cols-[1.04fr_.96fr] md:items-start md:gap-10 md:overflow-visible md:rounded-none md:bg-transparent lg:gap-14">
+          <div className="px-5 pt-[58px] md:p-0">
+            <div className="skeleton aspect-[1.08] w-full rounded-3xl md:aspect-square" />
+          </div>
+
+          <div className="relative -mt-3 space-y-5 rounded-t-[1.7rem] bg-[#281810] px-5 pb-6 pt-6 md:mt-0 md:rounded-none md:bg-transparent md:px-0 md:py-0">
+            <div className="skeleton h-9 w-3/4 rounded-lg" />
+            <div className="skeleton h-7 w-1/3 rounded-lg" />
+            <div className="skeleton h-24 w-full rounded-lg" />
+            <div className="skeleton h-16 w-2/3 rounded-lg" />
+          </div>
+        </section>
       </main>
     );
   if (nftQuery.isError)
