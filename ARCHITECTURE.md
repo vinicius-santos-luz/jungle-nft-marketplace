@@ -4,7 +4,9 @@
 
 Implementados: nove páginas, navegação tipada, URL de filtros, consulta REST via Axios/Query, dois usuários mock, cadastro/login/logout, favoritos otimistas, carrinho persistente e mesclado após login, cotação decimal, cupom, checkout com idempotência, recibo de pedido, atualização por Socket.IO e recuperação de pedido pendente após refresh.
 
-**Pendências não declaradas como concluídas:** fidelidade ao Figma, upload de avatar binário, cenários determinísticos completos de timeout após pedido e latência variável entre consultas, cobertura integral dos 12 grupos de testes, snapshots de regressão visual versionados, auditorias Lighthouse com resultados reais e confirmação E2E em Chromium. O catálogo possui cenários reproduzíveis de lentidão, resultado vazio, HTTP 503 e offline por seletor no rodapé.
+**Pendências não declaradas como concluídas:** fidelidade ao Figma, upload de avatar binário, cenários determinísticos completos de timeout após pedido e latência variável entre consultas, cobertura integral dos 12 grupos de testes, snapshots de regressão visual versionados, auditorias Lighthouse com resultados reais. O catálogo possui cenários reproduzíveis de lentidão, resultado vazio, HTTP 503 e offline por seletor no rodapé.
+
+**Validação E2E:** 28 testes Playwright aprovados localmente em Chromium desktop e mobile em 04/11/2026. Essa execução não substitui as auditorias Lighthouse nem comprova cobertura integral dos cenários planejados.
 
 ## Fluxo técnico
 
