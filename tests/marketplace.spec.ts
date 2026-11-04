@@ -56,7 +56,16 @@ test("login, profile, logout and direct route protection", async ({ page }) => {
     .click();
   await expect(page).toHaveURL(/\/login/);
   await expect
-    .poll(() => page.evaluate(() => localStorage.getItem("jungle-nft-token")))
+    .poll(async () => {
+      try {
+        return await page.evaluate(() => localStorage.getItem("jungle-nft-token"));
+      } catch (error) {
+        if (String(error).includes("Execution context was destroyed")) {
+          return "navigation-in-progress";
+        }
+        throw error;
+      }
+    })
     .toBeNull();
 
   await page.goto("/profile");
