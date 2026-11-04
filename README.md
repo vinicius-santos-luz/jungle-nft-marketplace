@@ -1,8 +1,10 @@
-# Jungle NFT Marketplace — Frontend Challenge
+# KURIO — NFT Marketplace
 
 Implementação de estudo do [desafio público da Jungle Gaming](https://github.com/junglegaming/frontend-challenge) usando React, TypeScript e APIs simuladas. **Não há blockchain nem pagamentos reais.**
 
-> **Status:** compilação TypeScript/Vite e lint validados nesta versão. A versão anterior teve 26 testes E2E aprovados no WSL do candidato; as alterações atuais, com 28 testes definidos, ainda precisam de nova execução no Chromium. Leia [ARCHITECTURE.md](./ARCHITECTURE.md) para decisões e limitações.
+> **Status:** build TypeScript/Vite aprovado, 28 testes E2E aprovados localmente com Playwright e lint executado sem erros, com avisos não bloqueantes. Leia [ARCHITECTURE.md](./ARCHITECTURE.md) para decisões e limitações.
+
+**Demonstração:** https://jungle-nft-marketplace-seven.vercel.app
 
 ## Stack
 
