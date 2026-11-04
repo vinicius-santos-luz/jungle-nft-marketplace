@@ -3,6 +3,7 @@ import { toSocketIo } from "@mswjs/socket.io-binding";
 import type {
   CartItem,
   CatalogSort,
+  CollectorDetails,
   Network,
   Order,
   Wallet,
@@ -24,6 +25,69 @@ const error = (message: string, status = 400, code = "BAD_REQUEST") =>
   HttpResponse.json({ message, code }, { status });
 const unauthorized = () =>
   error("Faça login para continuar.", 401, "UNAUTHORIZED");
+const VALID_NETWORKS: Network[] = ["Ethereum", "Polygon", "Base"];
+
+function validateCollector(
+  collector: CollectorDetails | undefined,
+  wallet: Wallet,
+  network: Network,
+  email: string,
+): string | null {
+  if (!collector || typeof collector !== "object") {
+    return "Preencha os dados do colecionador.";
+  }
+
+  const requiredFields: Array<[string, unknown]> = [
+    ["Nome de exibição", collector.displayName],
+    ["Nome de usuário", collector.username],
+    ["Nome do perfil", collector.profileName],
+    ["Endereço da carteira", collector.walletAddress],
+    ["Tipo de carteira", collector.walletType],
+    ["Código de indicação", collector.referralCode],
+    ["E-mail", collector.email],
+    ["Nome ENS", collector.ensName],
+  ];
+
+  for (const [label, value] of requiredFields) {
+    if (typeof value !== "string" || !value.trim()) {
+      return `${label} é obrigatório.`;
+    }
+  }
+
+  if (!VALID_NETWORKS.includes(network)) {
+    return "Selecione uma rede válida.";
+  }
+
+  if (!/^0x[a-fA-F0-9]{40}$/.test(collector.walletAddress)) {
+    return "Informe um endereço de carteira válido.";
+  }
+
+  if (collector.walletAddress.toLowerCase() !== wallet.address.toLowerCase()) {
+    return "O endereço informado não corresponde à carteira selecionada.";
+  }
+
+  if (wallet.network !== network) {
+    return "A carteira selecionada pertence a outra rede.";
+  }
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(collector.email)) {
+    return "Informe um e-mail válido.";
+  }
+
+  if (collector.email.toLowerCase() !== email.toLowerCase()) {
+    return "O e-mail deve corresponder à conta autenticada.";
+  }
+
+  if (!/^[a-zA-Z0-9_-]{3,30}$/.test(collector.username)) {
+    return "O nome de usuário deve ter entre 3 e 30 caracteres.";
+  }
+
+  if (!/^[a-z0-9-]+\.eth$/i.test(collector.ensName)) {
+    return "Informe um nome ENS no formato nome.eth.";
+  }
+
+  return null;
+}
 
 // The Socket.IO codec completes the handshake and emits actual Socket.IO frames.
 // The client uses socket.io-client with WebSocket transport, not React callbacks.
@@ -474,8 +538,18 @@ export const handlers = [
       network: Network;
       walletId: string;
       quoteRevision: string;
+      collector: CollectorDetails;
       decline?: boolean;
     };
+    const forceDecline =
+      import.meta.env.DEV &&
+      sessionStorage.getItem("jungle-test-decline-next-order") === "1";
+
+    sessionStorage.removeItem("jungle-test-decline-next-order");
+
+    if (forceDecline) {
+      body.decline = true;
+    }
     const fingerprint = JSON.stringify(body);
     const previous = store.orders.find(
       (order) => order.userId === user.id && order.idempotencyKey === key,
@@ -493,6 +567,16 @@ export const handlers = [
     );
     if (!wallet) return error("Carteira inválida.", 422, "VALIDATION");
     let quote;
+    const collectorError = validateCollector(
+      body.collector,
+      wallet,
+      body.network,
+      user.email,
+    );
+
+    if (collectorError) {
+      return error(collectorError, 422, "VALIDATION");
+    }
     try {
       quote = makeQuote(
         store,
@@ -518,6 +602,7 @@ export const handlers = [
       version: 1,
       network: body.network,
       walletId: wallet.id,
+      collector: structuredClone(body.collector),
       quote: structuredClone(quote),
       createdAt: new Date().toISOString(),
       txRef: body.decline
