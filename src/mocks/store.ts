@@ -143,8 +143,29 @@ export function resetStore() {
 }
 
 export function publicUser(user: MockUser): User {
-  const { id, name, email, avatar } = user;
-  return { id, name, email, avatar };
+  const {
+    id,
+    name,
+    email,
+    avatar,
+    username,
+    ensName,
+    profileName,
+    walletType,
+    referralCode,
+  } = user;
+
+  return {
+    id,
+    name,
+    email,
+    avatar,
+    username,
+    ensName,
+    profileName,
+    walletType,
+    referralCode,
+  };
 }
 
 export async function hashPassword(password: string) {

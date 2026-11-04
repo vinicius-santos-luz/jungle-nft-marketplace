@@ -27,6 +27,11 @@ export interface User {
   name: string;
   email: string;
   avatar: string;
+  username?: string;
+  ensName?: string;
+  profileName?: string;
+  walletType?: string;
+  referralCode?: string;
 }
 
 export interface Wallet {
