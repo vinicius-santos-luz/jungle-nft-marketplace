@@ -1,10 +1,10 @@
 import { expect, test, type Page } from "@playwright/test";
 
 async function loginAsDemo(page: Page) {
-  await page.getByRole("textbox", { name: "E-mail", exact: true })
+  await page
+    .getByRole("textbox", { name: "E-mail", exact: true })
     .fill("demo@jungle.test");
-  await page.getByLabel("Senha", { exact: true })
-    .fill("Demo1234!");
+  await page.getByLabel("Senha", { exact: true }).fill("Demo1234!");
   await page.getByRole("button", { name: "Entrar", exact: true }).click();
 }
 
@@ -52,7 +52,7 @@ test("login, profile, logout and direct route protection", async ({ page }) => {
   await expect(page).toHaveURL(/\/profile/);
 
   await page
-    .getByRole("button", { name: /log\s*out|logout|sign\s*out/i })
+    .getByRole("button", { name: /^(sair|log\s*out|logout|sign\s*out)$/i })
     .click();
   await expect(page).toHaveURL(/\/login/);
   await expect
@@ -298,15 +298,38 @@ test("collector profile can be edited and survives refresh", async ({
   await loginAsDemo(page);
   await expect(page).toHaveURL(/\/profile/);
   await page.goto("/profile");
+
+  await page.goto("/profile");
+
+  const displayNameInput = page.getByRole("textbox", {
+    name: "Nome de exibição*",
+    exact: true,
+  });
+
+  // Aguarda a consulta do perfil preencher o formulário.
+  await expect(displayNameInput).toHaveValue("Alex Morgan");
+
+  await displayNameInput.fill("Updated Collector");
+
   await page
-    .getByRole("textbox", { name: "Name", exact: true })
-    .fill("Updated Collector");
-  await page.getByRole("button", { name: "Save changes" }).click();
-  await expect(page.getByRole("status")).toContainText("updated");
+    .getByRole("textbox", { name: "Nome de usuário*", exact: true })
+    .fill("updatedcollector");
+
+  await page.getByRole("button", { name: "Salvar", exact: true }).click();
+
+  await expect(page.getByRole("status")).toContainText(
+    "Dados salvos com sucesso.",
+  );
+
   await page.reload();
+
   await expect(
-    page.getByRole("textbox", { name: "Name", exact: true }),
+    page.getByRole("textbox", { name: "Nome de exibição*", exact: true }),
   ).toHaveValue("Updated Collector");
+
+  await expect(
+    page.getByRole("textbox", { name: "Nome de usuário*", exact: true }),
+  ).toHaveValue("updatedcollector");
 });
 
 test("live price update invalidates quote and requires fresh review", async ({

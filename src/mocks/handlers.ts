@@ -400,11 +400,27 @@ export const handlers = [
     const store = getStore();
     const user = sessionUser(store, request);
     if (!user) return unauthorized();
-    const { name, email, avatar } = (await request.json()) as {
+
+    const {
+      name,
+      email,
+      avatar,
+      username,
+      ensName,
+      profileName,
+      walletType,
+      referralCode,
+    } = (await request.json()) as {
       name: string;
       email: string;
       avatar?: string;
+      username?: string;
+      ensName?: string;
+      profileName?: string;
+      walletType?: string;
+      referralCode?: string;
     };
+
     if (!name?.trim() || !email?.includes("@"))
       return error("Nome ou email inválido.", 422, "VALIDATION");
     if (
@@ -415,9 +431,19 @@ export const handlers = [
       )
     )
       return error("Email já utilizado.", 409, "CONFLICT");
+
     user.name = name.trim();
     user.email = email.trim();
     user.avatar = avatar?.slice(0, 12) || user.avatar;
+
+    if (username !== undefined) user.username = username.trim();
+    if (ensName !== undefined) user.ensName = ensName.trim();
+    if (profileName !== undefined) user.profileName = profileName.trim();
+    if (walletType !== undefined) user.walletType = walletType.trim();
+    if (referralCode !== undefined) user.referralCode = referralCode.trim();
+
+    saveStore(store);
+
     saveStore(store);
     return HttpResponse.json(publicUser(user));
   }),

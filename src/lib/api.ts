@@ -68,8 +68,17 @@ export const marketplaceApi = {
   favorite: (id: string) => api.post(`/favorites/${id}`),
   unfavorite: (id: string) => api.delete(`/favorites/${id}`),
   profile: () => api.get<User>("/profile").then((r) => r.data),
-  updateProfile: (data: Pick<User, "name" | "email" | "avatar">) =>
-    api.patch<User>("/profile", data).then((r) => r.data),
+
+  updateProfile: (
+    data: Pick<User, "name" | "email" | "avatar"> &
+      Partial<
+        Pick<
+          User,
+          "username" | "ensName" | "profileName" | "walletType" | "referralCode"
+        >
+      >,
+  ) => api.patch<User>("/profile", data).then((r) => r.data),
+
   updatePassword: (currentPassword: string, newPassword: string) =>
     api.patch("/profile/password", { currentPassword, newPassword }),
   wallets: () => api.get<Wallet[]>("/wallets").then((r) => r.data),
