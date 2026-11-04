@@ -55,11 +55,20 @@ export const Route = createFileRoute('/')({
     minPrice: typeof search.minPrice === 'string' && Number.isFinite(Number(search.minPrice)) ? search.minPrice : undefined,
     maxPrice: typeof search.maxPrice === 'string' && Number.isFinite(Number(search.maxPrice)) ? search.maxPrice : undefined,
   }),
-  component: HomePage,
+  component: HomeRoute,
 })
 
-function HomePage() {
+function HomeRoute() {
   const search = Route.useSearch()
+
+  return <HomePage search={search} />
+}
+
+export function HomePage({
+  search,
+}: {
+  search: CatalogParams
+}) {
   const navigate = useNavigate({ from: '/' })
   const [draft, setDraft] = useState(search.q ?? '')
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)

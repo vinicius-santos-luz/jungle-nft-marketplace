@@ -1,3 +1,4 @@
+import { HomePage } from '../routes/index'
 import {
   FaFacebookF,
   FaInstagram,
@@ -91,6 +92,7 @@ export function Shell() {
   });
   const isNftDetail = pathname.startsWith("/nft/");
   const isHome = pathname === "/";
+  const isAuthRoute = pathname === "/login" || pathname === "/register";
   const isMarketActive = isNftDetail || pathname === "/cart";
   const navigate = useNavigate();
   const [headerSearchOpen, setHeaderSearchOpen] = useState(false);
@@ -247,7 +249,23 @@ export function Shell() {
           </select>
         </label>
       </div>
-      <Outlet />
+      {isAuthRoute ? (
+        <>
+          <div aria-hidden="true" inert>
+            <HomePage
+              search={{
+                q: '',
+                category: 'all',
+                sort: 'featured',
+                page: 1,
+              }}
+            />
+          </div>
+          <Outlet />
+        </>
+      ) : (
+        <Outlet />
+      )}
       <nav
         className={`fixed inset-x-0 bottom-0 z-40 h-[88px] grid-cols-4 items-center rounded-t-[2rem] border-t border-[#523524] bg-[#25150f] px-5 text-[#ddb085] shadow-2xl md:hidden ${isNftDetail ? "hidden" : "grid"}`}
         aria-label="Navegação móvel"
