@@ -55,7 +55,7 @@ export function initialStore(): Store {
         {
           id: "wallet-demo",
           label: "Main Wallet",
-          address: "0xA2C9...4b71",
+          address: "0xA2C9000000000000000000000000000000004b71",
           network: "Ethereum",
           primary: true,
         },
@@ -64,7 +64,7 @@ export function initialStore(): Store {
         {
           id: "wallet-test",
           label: "Primary Wallet",
-          address: "0xD8E1...9a24",
+          address: "0xD8E1000000000000000000000000000000009a24",
           network: "Polygon",
           primary: true,
         },
@@ -83,6 +83,26 @@ export function getStore(): Store {
       const store = JSON.parse(raw) as Store;
 
       let updated = false;
+
+      for (const wallets of Object.values(store.wallets)) {
+        for (const wallet of wallets) {
+          if (
+            wallet.id === "wallet-demo" &&
+            wallet.address === "0xA2C9...4b71"
+          ) {
+            wallet.address = "0xA2C9000000000000000000000000000000004b71";
+            updated = true;
+          }
+
+          if (
+            wallet.id === "wallet-test" &&
+            wallet.address === "0xD8E1...9a24"
+          ) {
+            wallet.address = "0xD8E1000000000000000000000000000000009a24";
+            updated = true;
+          }
+        }
+      }
 
       store.nfts = store.nfts.map((nft) => {
         const seed = seedNfts.find((item) => item.id === nft.id);

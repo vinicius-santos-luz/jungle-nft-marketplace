@@ -36,6 +36,18 @@ export interface Wallet {
   network: Network;
   primary: boolean;
 }
+export interface CollectorDetails {
+  displayName: string;
+  username: string;
+  profileName: string;
+  walletAddress: string;
+  walletType: string;
+  referralCode: string;
+  email: string;
+  ensName: string;
+  secondaryWallet?: string;
+  notes?: string;
+}
 
 export interface CartItem {
   nftId: string;
@@ -68,6 +80,7 @@ export interface Order {
   quote: Quote;
   createdAt: string;
   txRef: string;
+  collector: CollectorDetails;
 }
 
 export interface ApiError {

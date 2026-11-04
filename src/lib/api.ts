@@ -5,6 +5,7 @@ import type {
   CartItem,
   CatalogParams,
   CatalogResponse,
+  CollectorDetails,
   NFT,
   Network,
   Order,
@@ -83,6 +84,7 @@ export const marketplaceApi = {
       network: Network;
       walletId: string;
       quoteRevision: string;
+      collector: CollectorDetails;
       decline?: boolean;
     },
     key: string,

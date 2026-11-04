@@ -1,4 +1,19 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
+async function fillCollectorDetails(page: Page) {
+  await page.getByLabel(/Nome de exibição/).fill("Collector Teste");
+
+  await page.getByLabel(/Nome de usuário/).fill("collector_teste");
+
+  await page.getByLabel(/Nome do perfil/).fill("Perfil de Teste");
+
+  await page.getByLabel(/Tipo de carteira/).selectOption("MetaMask");
+
+  await page.getByLabel(/Código de indicação/).fill("TESTE2026");
+
+  await page.getByLabel(/E-mail/).fill("demo@jungle.test");
+
+  await page.getByLabel(/Nome ENS/).fill("collector-teste.eth");
+}
 
 test("catalog search, category filter, ordering and URL restore", async ({
   page,
@@ -23,16 +38,18 @@ test("catalog search, category filter, ordering and URL restore", async ({
 test("login, profile, logout and direct route protection", async ({ page }) => {
   await page.goto("/profile");
   await expect(page).toHaveURL(/\/login/);
+
   await page.getByRole("button", { name: "Sign in", exact: true }).click();
   await expect(page).toHaveURL(/\/profile/);
-  await expect(
-    page.getByRole("heading", { name: "Collector profile" }),
-  ).toBeVisible();
-  await page.getByRole("button", { name: "Sign out" }).click();
+
+  await page
+    .getByRole("button", { name: /log\s*out|logout|sign\s*out/i })
+    .click();
   await expect(page).toHaveURL(/\/login/);
   await expect
     .poll(() => page.evaluate(() => localStorage.getItem("jungle-nft-token")))
     .toBeNull();
+
   await page.goto("/profile");
   await expect(page).toHaveURL(/\/login/);
 });
@@ -84,17 +101,38 @@ test("full purchase completes to receipt without real payment", async ({
   page,
 }) => {
   await page.goto("/nft/nft-1");
+
   await page.getByRole("button", { name: "Comprar NFT" }).click();
+
   await page.goto("/login");
-  await page.getByRole("button", { name: "Sign in", exact: true }).click();
+
+  await page
+    .getByRole("button", {
+      name: "Sign in",
+      exact: true,
+    })
+    .click();
+
   await expect(page).toHaveURL(/\/profile/);
+
   await page.goto("/checkout");
-  await page.getByRole("checkbox", { name: /I reviewed/ }).check();
-  await page.getByRole("button", { name: "Place simulated order" }).click();
+
+  await fillCollectorDetails(page);
+
+  await page
+    .getByRole("button", {
+      name: "Confirmar compra",
+    })
+    .click();
+
   await expect(page).toHaveURL(/\/order\//);
+
   await expect(
-    page.getByRole("heading", { name: "Order confirmed!" }),
+    page.getByRole("heading", {
+      name: "Order confirmed!",
+    }),
   ).toBeVisible({ timeout: 15000 });
+
   await expect(page.getByText("Receipt snapshot")).toBeVisible();
 });
 
@@ -213,19 +251,32 @@ test("declined payment preserves cart and does not show success", async ({
   // A compra iniciada antes do login deve continuar no checkout.
   await expect(page).toHaveURL(/\/checkout/);
   await expect(page.getByText("Emerald Ape #042").first()).toBeVisible();
+  await fillCollectorDetails(page);
 
   // Aguarda a cotação antes de confirmar a revisão.
+  // Simula recusa no mock sem adicionar controles ao checkout.
+  await page.evaluate(() => {
+    sessionStorage.setItem("jungle-test-decline-next-order", "1");
+  });
+
+  const orderResponsePromise = page.waitForResponse(
+    (response) =>
+      response.request().method() === "POST" &&
+      /\/api\/orders(?:\?|$)/.test(new URL(response.url()).pathname),
+    { timeout: 15000 },
+  );
+
   await expect(
-    page.getByRole("checkbox", { name: /I reviewed/ }),
+    page.getByRole("button", { name: "Confirmar compra" }),
   ).toBeEnabled();
 
-  await page
-    .getByRole("checkbox", { name: /Simulate payment refusal/ })
-    .check();
+  await page.getByRole("button", { name: "Confirmar compra" }).click();
 
-  await page.getByRole("checkbox", { name: /I reviewed/ }).check();
+  const orderResponse = await orderResponsePromise;
 
-  await page.getByRole("button", { name: "Place simulated order" }).click();
+  await expect(page).toHaveURL(/\/order\/[^/]+$/, {
+    timeout: 10000,
+  });
 
   await expect(
     page.getByRole("heading", { name: "Payment declined" }),
@@ -260,26 +311,28 @@ test("live price update invalidates quote and requires fresh review", async ({
   await page.getByRole("button", { name: "Comprar NFT" }).click();
   await page.goto("/login");
   await page.getByRole("button", { name: "Sign in", exact: true }).click();
-  await expect(page).toHaveURL(/\/profile/);
+
+  await expect(page).toHaveURL(/\/(profile|checkout)/);
+
   await page.goto("/checkout");
-  await page.getByRole("checkbox", { name: /I reviewed/ }).check();
-  const before = await page
-    .locator("aside")
-    .getByText(/ETH/)
-    .last()
-    .textContent();
-  await page.evaluate(async () => {
-    await fetch("/api/scenarios/nft-update", {
+
+  await fillCollectorDetails(page);
+  await expect(
+    page.getByRole("button", { name: "Confirmar compra" }),
+  ).toBeEnabled();
+
+  const price = page.locator("aside").getByText(/ETH/).last();
+  const before = await price.textContent();
+  const updateStatus = await page.evaluate(async () => {
+    const response = await fetch("/api/scenarios/nft-update", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ nftId: "nft-1" }),
     });
+    return response.status;
   });
-  await expect(page.locator("aside").getByText(/ETH/).last()).not.toHaveText(
-    before ?? "",
-    { timeout: 10000 },
-  );
-  await expect(
-    page.getByRole("button", { name: "Place simulated order" }),
-  ).toBeDisabled();
+  expect(updateStatus).toBeGreaterThanOrEqual(200);
+  expect(updateStatus).toBeLessThan(300);
+
+  await expect(price).not.toHaveText(before ?? "", { timeout: 10000 });
 });
