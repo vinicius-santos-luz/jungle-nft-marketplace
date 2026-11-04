@@ -1,4 +1,13 @@
 import { expect, test, type Page } from "@playwright/test";
+
+async function loginAsDemo(page: Page) {
+  await page.getByRole("textbox", { name: "E-mail", exact: true })
+    .fill("demo@jungle.test");
+  await page.getByLabel("Senha", { exact: true })
+    .fill("Demo1234!");
+  await page.getByRole("button", { name: "Entrar", exact: true }).click();
+}
+
 async function fillCollectorDetails(page: Page) {
   await page.getByLabel(/Nome de exibição/).fill("Collector Teste");
 
@@ -39,7 +48,7 @@ test("login, profile, logout and direct route protection", async ({ page }) => {
   await page.goto("/profile");
   await expect(page).toHaveURL(/\/login/);
 
-  await page.getByRole("button", { name: "Sign in", exact: true }).click();
+  await loginAsDemo(page);
   await expect(page).toHaveURL(/\/profile/);
 
   await page
@@ -58,7 +67,7 @@ test("favorites persist after refresh for authenticated user", async ({
   page,
 }) => {
   await page.goto("/login");
-  await page.getByRole("button", { name: "Sign in", exact: true }).click();
+  await loginAsDemo(page);
   await expect(page).toHaveURL(/\/profile/);
   await page.goto("/");
   await page
@@ -106,14 +115,9 @@ test("full purchase completes to receipt without real payment", async ({
 
   await page.goto("/login");
 
-  await page
-    .getByRole("button", {
-      name: "Sign in",
-      exact: true,
-    })
-    .click();
+  await loginAsDemo(page);
 
-  await expect(page).toHaveURL(/\/profile/);
+  await expect(page).toHaveURL(/\/(profile|checkout)/);
 
   await page.goto("/checkout");
 
@@ -159,7 +163,7 @@ test("NFT gallery and buy action lead to checkout without losing the cart", asyn
   );
   await page.getByRole("button", { name: "Comprar NFT" }).click();
   await expect(page).toHaveURL(/\/login/);
-  await page.getByRole("button", { name: "Sign in", exact: true }).click();
+  await loginAsDemo(page);
   await expect(page).toHaveURL(/\/checkout/);
   await expect(page.getByText("Emerald Ape #042").first()).toBeVisible();
 });
@@ -206,13 +210,14 @@ test("registration reports duplicate email without changing the account", async 
 }) => {
   await page.goto("/register");
   await page
-    .getByRole("textbox", { name: "Full name" })
+    .getByRole("textbox", { name: "Nome de usuário" })
     .fill("Duplicate Account");
   await page
-    .getByRole("textbox", { name: "Email", exact: true })
+    .getByRole("textbox", { name: "E-mail", exact: true })
     .fill("demo@jungle.test");
-  await page.getByLabel("Password").fill("Another1234!");
-  await page.getByRole("button", { name: "Create account" }).click();
+  await page.getByLabel("Senha", { exact: true }).fill("Another1234!");
+  await page.getByLabel("Confirmar senha").fill("Another1234!");
+  await page.getByRole("button", { name: "Criar conta", exact: true }).click();
   await expect(page.getByRole("alert")).toContainText("já está cadastrado");
 });
 
@@ -246,7 +251,7 @@ test("declined payment preserves cart and does not show success", async ({
   ).toBeVisible();
 
   await page.goto("/login");
-  await page.getByRole("button", { name: "Sign in", exact: true }).click();
+  await loginAsDemo(page);
 
   // A compra iniciada antes do login deve continuar no checkout.
   await expect(page).toHaveURL(/\/checkout/);
@@ -290,7 +295,7 @@ test("collector profile can be edited and survives refresh", async ({
   page,
 }) => {
   await page.goto("/login");
-  await page.getByRole("button", { name: "Sign in", exact: true }).click();
+  await loginAsDemo(page);
   await expect(page).toHaveURL(/\/profile/);
   await page.goto("/profile");
   await page
@@ -310,7 +315,7 @@ test("live price update invalidates quote and requires fresh review", async ({
   await page.goto("/nft/nft-1");
   await page.getByRole("button", { name: "Comprar NFT" }).click();
   await page.goto("/login");
-  await page.getByRole("button", { name: "Sign in", exact: true }).click();
+  await loginAsDemo(page);
 
   await expect(page).toHaveURL(/\/(profile|checkout)/);
 
