@@ -51,3 +51,19 @@ Os dois testes isolados de logout continuaram falhando, desta vez porque a prote
 O README do desafio exige logout, limpeza de dados privados e proteção de rotas, mas não fixa uma URL de destino após sair. A solução final é **não iniciar uma segunda navegação no botão**. O contexto apaga o token local imediatamente, e `RequireAuth` redireciona para `/login`. O teste passa a conferir `/login`, verificar que o token sumiu e tentar novamente a rota privada. Esse comportamento ainda precisa de confirmação no navegador do candidato.
 
 Não execute dois servidores Vite simultaneamente na mesma porta. Caso haja novas falhas, envie o relatório atualizado e, se possível, o `error-context.md` ou trace específico do teste. A integração Socket.IO ainda precisa ser verificada em navegador para assegurar que os eventos realmente chegam ao cliente; o polling REST de reconciliação não substitui essa exigência do desafio.
+
+## Validação final — 04/11/2026
+
+Após as correções anteriores, a suíte completa do Playwright foi executada localmente no WSL, com **28 testes aprovados**, sem falhas.
+
+A última correção ocorreu em `tests/marketplace.spec.ts`, na verificação do logout. Durante o redirecionamento para `/login`, a navegação podia destruir o contexto JavaScript antes da leitura do `localStorage`, produzindo o erro `Execution context was destroyed`.
+
+O teste passou a tolerar especificamente essa transição de navegação e repetir a verificação até confirmar a remoção do token `jungle-nft-token`. Outros erros continuam sendo propagados.
+
+**Resultados registrados:**
+
+- `npm run test:e2e`: 28 testes aprovados.
+- `npm run build`: concluído com sucesso.
+- `npm run lint`: executado sem erros, com avisos não bloqueantes.
+
+Esses resultados correspondem à validação local realizada em 04/11/2026. Não comprovam cobertura integral dos cenários planejados, paridade visual com o Figma ou auditorias Lighthouse concluídas.
