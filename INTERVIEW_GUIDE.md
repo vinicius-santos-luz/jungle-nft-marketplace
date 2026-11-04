@@ -4,7 +4,7 @@ Este documento é um roteiro de estudo, não uma fala para decorar. Abra os arqu
 
 ## Explicação de 60 segundos
 
-"Montei um Marketplace de NFTs em React e TypeScript. O TanStack Router controla as telas e mantém filtros do catálogo na URL. Os componentes fazem requisições via Axios, e o TanStack Query gerencia cache, carregamento e invalidações. Como o desafio não utiliza backend real, construí handlers REST com MSW e uma store local de demonstração. O carrinho e o checkout calculam valores em ETH com Decimal.js. Eventos de preço e pedido passam por Socket.IO para sincronizar os dados, e a compra usa chave de idempotência para evitar duplicações. Também configurei Playwright e comandos Lighthouse, embora a validação final no navegador ainda precise ser executada."
+"Montei um Marketplace de NFTs em React e TypeScript. O TanStack Router controla as telas e mantém filtros do catálogo na URL. Os componentes fazem requisições via Axios, e o TanStack Query gerencia cache, carregamento e invalidações. Como o desafio não utiliza backend real, construí handlers REST com MSW e uma store local de demonstração. O carrinho e o checkout calculam valores em ETH com Decimal.js. Eventos de preço e pedido passam por Socket.IO para sincronizar os dados, e a compra usa chave de idempotência para evitar duplicações. Também configurei Playwright e comandos Lighthouse. Os 28 testes E2E passaram localmente em Chromium desktop e mobile; as auditorias Lighthouse com resultados reais ainda estão pendentes."
 
 ## Perguntas prováveis e onde estudar
 
@@ -23,7 +23,7 @@ Este documento é um roteiro de estudo, não uma fala para decorar. Abra os arqu
 13. **Como evita eventos duplicados?** Cada recurso tem uma versão; o cliente ignora versões menores ou iguais às que já processou.
 14. **O que é idempotência?** Mesma tentativa de compra com mesma chave e conteúdo retorna o mesmo pedido; conteúdo diferente com a mesma chave gera 409.
 15. **Por que o recibo não muda quando o preço do NFT muda?** O pedido grava um snapshot da cotação. A história da transação precisa permanecer estável.
-16. **Quais testes existem?** `tests/marketplace.spec.ts` descreve fluxos de catálogo, conta, compra, falhas, preço e mobile. Execute-os no Chromium e corrija falhas antes de afirmar que passaram.
+16. **Quais testes existem?** `tests/marketplace.spec.ts` descreve fluxos de catálogo, conta, compra, falhas, preço e mobile. Na validação local de 04/11/2026, os 28 testes passaram em Chromium desktop e mobile. Novas alterações exigem nova execução para confirmar que continuam passando.
 17. **O que falta?** Paridade ao Figma, auditorias Lighthouse, baselines visuais e cobertura total de falhas. Seja transparente sobre o que foi entregue e o que ainda depende de validação.
 
 ## Sequência para apresentar ao avaliador
