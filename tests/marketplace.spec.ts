@@ -373,3 +373,47 @@ test("live price update invalidates quote and requires fresh review", async ({
 
   await expect(price).not.toHaveText(before ?? "", { timeout: 10000 });
 });
+
+test("visual baseline: home", async ({ page }) => {
+  await page.goto("/");
+
+  await expect(
+    page.getByRole("tab", { name: "Todos os NFTs" }),
+  ).toBeVisible();
+
+  await expect(page.getByText("Emerald Ape #042").first()).toBeVisible();
+
+  await page.evaluate(async () => {
+    await document.fonts.ready;
+    await Promise.all(
+      Array.from(document.images).map((image) =>
+        image.decode().catch(() => undefined),
+      ),
+    );
+  });
+
+  await expect(page).toHaveScreenshot("home.png", {
+    animations: "disabled",
+    caret: "hide",
+  });
+});
+
+test("visual baseline: NFT detail", async ({ page }) => {
+  await page.goto("/nft/nft-1");
+
+  await expect(page.locator("main h1")).toBeVisible();
+
+  await page.evaluate(async () => {
+    await document.fonts.ready;
+    await Promise.all(
+      Array.from(document.images).map((image) =>
+        image.decode().catch(() => undefined),
+      ),
+    );
+  });
+
+  await expect(page).toHaveScreenshot("nft-detail.png", {
+    animations: "disabled",
+    caret: "hide",
+  });
+});
