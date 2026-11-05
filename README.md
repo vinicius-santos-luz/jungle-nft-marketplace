@@ -67,9 +67,9 @@ npm run audit:mobile
 npm run audit:desktop
 ```
 
-Playwright está configurado para Chromium desktop (1440 px) e mobile (390 px), relatório HTML e traces de falha. Os snapshots devem ser revisados antes de versionar baselines.
+Playwright está configurado para Chromium desktop (1440 px) e mobile (390 px), relatório HTML e traces de falha. Existem quatro baselines visuais versionadas: Home e detalhe NFT em desktop e mobile. Revise as diferenças antes de atualizar essas referências.
 
-Lighthouse requer Chrome/Chromium. Antes das auditorias, execute `npm run build` e `npm run preview` em outro terminal. Execute três medições por página/perfil, informe medianas e LCP/CLS/TBT. **Os relatórios de auditoria ainda não foram gerados.**
+Lighthouse requer Chrome/Chromium. Antes das auditorias, execute `npm run build` e `npm run preview` em outro terminal. Execute três medições por página/perfil, informe medianas e LCP/CLS/TBT. Os resultados das 12 medições Lighthouse estão consolidados em [PERFORMANCE_AUDIT.md](./PERFORMANCE_AUDIT.md).
 
 ## Pastas
 
