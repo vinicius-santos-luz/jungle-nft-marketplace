@@ -21,7 +21,7 @@ flowchart LR
   Client --> Query
 ```
 
-As respostas fictícias são produzidas pelos handlers MSW, não por componentes/hooks. A fixture inicial de NFTs é determinística. `localStorage` guarda o mock (`jungle-nft-mock-v4`); reset restaura tudo. A mudança de versão reinicia dados de demonstração antigos para atualizar imagens e atributos de coleção.
+As respostas fictícias são produzidas pelos handlers MSW, não por componentes/hooks. A fixture inicial de NFTs é determinística. `localStorage` guarda o mock (`jungle-nft-mock-v5`); reset restaura tudo. A mudança de versão reinicia dados de demonstração antigos para atualizar imagens e atributos de coleção.
 
 ## Contratos REST
 
@@ -75,3 +75,9 @@ As contagens de categorias da barra lateral correspondem aos 12 NFTs da fixture,
 ## Segurança e deployment
 
 O mock roda inteiramente no cliente, portanto não é seguro para uso real. Sem segredos, dados pessoais nem pagamentos verdadeiros. O build público carrega MSW por padrão e precisa servir o worker. Na Vercel, `vercel.json` fornece fallback SPA. Uma aplicação real demandaria backend, autorização, prevenção a abuso, isolamento multiusuário e transações blockchain auditadas.
+
+## Qualidade e integridade (branch de auditoria)
+
+O workflow `.github/workflows/ci.yml` valida lint, typecheck, build e Playwright no GitHub Actions. Sua aprovação depende da execução real dos jobs; a presença do arquivo não comprova sucesso.
+
+Os endpoints de carteiras e cotação rejeitam redes fora de `Ethereum`, `Polygon` e `Base`. Pedidos simulados usam identificadores UUID com prefixo `JG-`, mantendo o mecanismo de idempotência por chave. O armazenamento continua no navegador, sem garantias de segurança ou persistência de um backend real.
