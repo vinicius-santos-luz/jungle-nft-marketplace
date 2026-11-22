@@ -241,8 +241,6 @@ export function makeQuote(
       : new Decimal(0);
   const networkFee =
     network === "Ethereum" ? new Decimal("0.016") : new Decimal("0.001");
-  new Decimal("0.001");
-  new Decimal("0.001");
   const total = subtotal.minus(discount).plus(networkFee);
   const revision =
     JSON.stringify(
