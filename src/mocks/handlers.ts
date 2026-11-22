@@ -133,6 +133,12 @@ function settleAndNotify() {
   }
 }
 
+const VALID_NETWORKS = ["Ethereum", "Polygon", "Base"] as const;
+
+function isNetwork(value: unknown): value is Network {
+  return VALID_NETWORKS.some((network) => network === value);
+}
+
 export const handlers = [
   socketHandler,
 
@@ -347,6 +353,8 @@ export const handlers = [
       coupon?: string | null;
       network?: Network;
     };
+    if (!isNetwork(network))
+      return error("Rede inválida.", 422, "VALIDATION");
     const store = getStore();
     const items = store.carts[cartKey(sessionUser(store, request))] ?? [];
     if (!items.length)
@@ -443,8 +451,6 @@ export const handlers = [
     if (referralCode !== undefined) user.referralCode = referralCode.trim();
 
     saveStore(store);
-
-    saveStore(store);
     return HttpResponse.json(publicUser(user));
   }),
 
@@ -491,6 +497,8 @@ export const handlers = [
         422,
         "VALIDATION",
       );
+    if (!isNetwork(body.network))
+      return error("Rede inválida.", 422, "VALIDATION");
     const wallets = store.wallets[user.id] ?? [];
     const wallet: Wallet = {
       id: crypto.randomUUID(),
@@ -517,6 +525,10 @@ export const handlers = [
     const wallets = store.wallets[user.id] ?? [];
     const wallet = wallets.find((item) => item.id === params.id);
     if (!wallet) return error("Carteira não encontrada.", 404, "NOT_FOUND");
+    if (body.network !== undefined && !isNetwork(body.network))
+      return error("Rede inválida.", 422, "VALIDATION");
+    if (body.label !== undefined && !body.label.trim())
+      return error("Nome da carteira inválido.", 422, "VALIDATION");
     if (body.primary)
       wallets.forEach((item) => {
         item.primary = false;
@@ -588,6 +600,8 @@ export const handlers = [
             409,
             "IDEMPOTENCY_CONFLICT",
           );
+    if (!isNetwork(body.network))
+      return error("Rede inválida.", 422, "VALIDATION");
     const wallet = (store.wallets[user.id] ?? []).find(
       (item) => item.id === body.walletId,
     );
@@ -620,7 +634,7 @@ export const handlers = [
         "STALE_QUOTE",
       );
     const order: Order = {
-      id: `JG-${Date.now().toString(36).toUpperCase()}`,
+      id: `JG-${crypto.randomUUID()}`,
       userId: user.id,
       idempotencyKey: key,
       fingerprint,
