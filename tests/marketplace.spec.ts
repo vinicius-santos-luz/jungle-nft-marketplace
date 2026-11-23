@@ -357,9 +357,11 @@ test("live price update invalidates quote and requires fresh review", async ({
 
   await page.goto("/checkout");
 
+  // The quote is only requested after the authenticated cart has loaded.
+  // Assert the prerequisite explicitly so a missing cart cannot be mistaken
+  // for a slow quote or a price-update failure.
+  await expect(page.getByText("Emerald Ape #042").first()).toBeVisible();
   await fillCollectorDetails(page);
-  // This scenario verifies quote invalidation, not whether the purchase button
-  // is enabled during periodic quote refreshes.
   const price = page.locator("aside dl dd").last();
   await expect(price).toHaveText(/^\d+(?:\.\d+)? ETH$/, { timeout: 10000 });
   const before = await price.textContent();
