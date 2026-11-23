@@ -25,8 +25,11 @@ jobs:
           node-version: "24"
           cache: npm
       - run: npm ci
-      - name: Audit dependency advisories (non-blocking)
+      - name: Audit all dependency advisories (non-blocking)
         run: npm audit --audit-level=moderate
+        continue-on-error: true
+      - name: Audit production dependency advisories (non-blocking)
+        run: npm audit --omit=dev --audit-level=moderate
         continue-on-error: true
       - run: npm run lint
       - run: npm run typecheck
