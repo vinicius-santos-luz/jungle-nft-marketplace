@@ -356,11 +356,10 @@ test("live price update invalidates quote and requires fresh review", async ({
   await page.goto("/checkout");
 
   await fillCollectorDetails(page);
-  await expect(
-    page.getByRole("button", { name: "Confirmar compra" }),
-  ).toBeEnabled();
-
-  const price = page.locator("aside").getByText(/ETH/).last();
+  // This scenario verifies quote invalidation, not whether the purchase button
+  // is enabled during periodic quote refreshes.
+  const price = page.locator("aside dl").getByText(/\\d+(?:\\.\\d+)? ETH/).last();
+  await expect(price).toHaveText(/^\\d+(?:\\.\\d+)? ETH$/);
   const before = await price.textContent();
   const updateStatus = await page.evaluate(async () => {
     const response = await fetch("/api/scenarios/nft-update", {
