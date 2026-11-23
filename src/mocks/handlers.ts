@@ -133,8 +133,6 @@ function settleAndNotify() {
   }
 }
 
-const VALID_NETWORKS = ["Ethereum", "Polygon", "Base"] as const;
-
 function isNetwork(value: unknown): value is Network {
   return VALID_NETWORKS.some((network) => network === value);
 }
