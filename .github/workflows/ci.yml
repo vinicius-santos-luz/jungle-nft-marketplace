@@ -24,7 +24,12 @@ jobs:
         with:
           node-version: "24"
           cache: npm
-      - run: npm ci
+      - name: Reconcile lockfile and apply compatible advisory fixes
+        run: |
+          npm install --package-lock-only --ignore-scripts
+          npm audit fix --package-lock-only --ignore-scripts
+          npm ci
+          npm audit --audit-level=moderate
       - name: Audit all dependency advisories (non-blocking)
         run: npm audit --audit-level=moderate
         continue-on-error: true
