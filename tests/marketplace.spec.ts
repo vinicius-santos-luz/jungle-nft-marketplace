@@ -180,6 +180,8 @@ test("NFT gallery and buy action lead to checkout without losing the cart", asyn
 test("invalid coupon gives error, then user can recover", async ({ page }) => {
   await page.goto("/nft/nft-1");
   await page.getByRole("button", { name: "Comprar NFT" }).click();
+  // Buying navigates only after the asynchronous add-to-cart mutation succeeds.
+  await expect(page).toHaveURL(/\/checkout/);
   await page.goto("/cart");
   const orderTotal = page.locator("aside dl > div").last().locator("dd");
   await expect(orderTotal).toHaveText(/^\d+(?:\.\d{1,6})? ETH$/);
