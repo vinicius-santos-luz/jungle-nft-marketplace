@@ -101,6 +101,7 @@ test("cart quantity and removal are persisted and validated", async ({
     0,
   );
   await page.getByRole("button", { name: "Comprar NFT" }).click();
+  await expect(page).toHaveURL(/\/checkout/);
   await page.goto("/cart");
   await expect(page.getByText("Emerald Ape #042").first()).toBeVisible();
   await page.getByRole("button", { name: "Aumentar Emerald Ape #042" }).click();
@@ -121,6 +122,7 @@ test("full purchase completes to receipt without real payment", async ({
   await page.goto("/nft/nft-1");
 
   await page.getByRole("button", { name: "Comprar NFT" }).click();
+  await expect(page).toHaveURL(/\/checkout/);
 
   await page.goto("/login");
 
