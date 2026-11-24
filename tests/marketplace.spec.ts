@@ -350,12 +350,9 @@ test("live price update invalidates quote and requires fresh review", async ({
 }) => {
   await page.goto("/nft/nft-1");
   await page.getByRole("button", { name: "Comprar NFT" }).click();
-  await page.goto("/login");
+  await expect(page).toHaveURL(/\/login/);
   await loginAsDemo(page);
-
-  await expect(page).toHaveURL(/\/(profile|checkout)/);
-
-  await page.goto("/checkout");
+  await expect(page).toHaveURL(/\/checkout/);
 
   // The quote is only requested after the authenticated cart has loaded.
   // Assert the prerequisite explicitly so a missing cart cannot be mistaken
